@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 396946299879062996}
   - component: {fileID: 6977166147043209951}
   - component: {fileID: 8184734533693082506}
-  - component: {fileID: 7167137295441657118}
+  - component: {fileID: 6778533399408582201}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -123,7 +123,7 @@ MonoBehaviour:
   OnWeaponChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7167137295441657118
+--- !u!114 &6778533399408582201
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,15 +132,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2084260004282864625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d990635825dd58c4daf4bb3bccd78c7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 34af70aefd205244aa26d800343b98cb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradeShop
-  availableUpgrades: []
-  availableWeapons: []
-  shopUI: {fileID: 0}
-  OnUpgradePurchased:
-    m_PersistentCalls:
-      m_Calls: []
-  OnWeaponPurchased:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  isPaused: 0
+  playerHealth: {fileID: 0}
+  waveSpawner: {fileID: 0}

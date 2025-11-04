@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 6365027299967487701}
   - component: {fileID: 6475883508080983477}
   - component: {fileID: 1849668654892477777}
+  - component: {fileID: 2605203774712707426}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -209,13 +210,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.6
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &1685495968564811659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,6 +430,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528d47630cbc16e4cb2a903b1c387bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisualFeedback
-  targetRenderer: {fileID: 0}
+  targetRenderer: {fileID: 3124193673881949612}
   damageColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.1
+--- !u!114 &2605203774712707426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7603797093342593862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05aad30438d7ca54e9abf820bd13db1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisualModelAligner
+  visualModel: {fileID: 1380051239034853825}
+  alignOnAwake: 1
+  visualModelHeight: 1
