@@ -1,0 +1,269 @@
+========================================
+ROGUELIKE PROTOTYPE - SETUP GUIDE
+========================================
+
+PHASE 1: PLAYER SETUP
+========================================
+
+1. SELECT PLAYER GAMEOBJECT
+   - Add Component: Character Controller
+   - Add Component: Player Controller (script)
+   - Add Component: Player Health (script)
+   - Add Component: Player Combat (script)
+   - Add Component: Player Input
+
+2. CONFIGURE CHARACTER CONTROLLER
+   - Center: (0, 1, 0)
+   - Radius: 0.5
+   - Height: 2
+   - Min Move Distance: 0.001
+
+3. CONFIGURE PLAYER INPUT COMPONENT
+   - Actions: Select "InputSystem_Actions"
+   - Default Map: Player
+   - Behavior: Invoke Unity Events
+   
+4. CONNECT INPUT EVENTS TO PLAYER CONTROLLER
+   In Player Input component, expand Events > Player:
+   - Move: Connect to PlayerController.OnMove
+   - Jump: Connect to PlayerController.OnJump
+   - Sprint: Connect to PlayerController.OnSprint
+   - Attack: Connect to PlayerCombat.OnAttack
+   
+5. ADD ROLL ACTION TO INPUT SYSTEM
+   - Open InputSystem_Actions asset
+   - In Player action map, add new action "Roll"
+   - Type: Button
+   - Add binding: Left Shift (Keyboard)
+   - Add binding: B Button (Gamepad)
+   - Connect in Player Input: Roll -> PlayerController.OnRoll
+
+6. SET PLAYER TAG
+   - Select Player GameObject
+   - Set Tag to "Player" (create if needed)
+
+7. CREATE ATTACK POINT
+   - Create empty child GameObject under Player
+   - Name it "AttackPoint"
+   - Position it slightly in front: (0, 1, 0.5)
+   - Drag to PlayerCombat's "Attack Point" field
+
+
+PHASE 2: CAMERA SETUP (Cinemachine 3.x)
+========================================
+
+1. CREATE CINEMACHINE CAMERA
+   - GameObject > Cinemachine > Targeted Cameras > Follow Camera
+   - Or: GameObject > Cinemachine > Cinemachine Camera
+   - Name it "PlayerCamera"
+
+2. CONFIGURE CINEMACHINE CAMERA (In Inspector)
+   - Tracking Target: Drag Player Transform here
+   - This sets both Follow and LookAt to the same target
+   
+3. SET POSITION CONTROL (For Isometric View)
+   - In CinemachineCamera component
+   - Position Control: Select "Position Composer"
+   - Camera Distance: 12 (adjust for desired zoom)
+   - Follow Offset: (0, 0, 0) or adjust as needed
+   
+4. SET ROTATION CONTROL
+   - Rotation Control: Select "Rotation Composer"
+   - Screen Position: (0.5, 0.4) for slightly lower framing
+   
+5. POSITION THE CAMERA FOR ISOMETRIC VIEW
+   - Transform Position: (0, 12, -12) relative to origin
+   - Or manually position behind and above player area
+   
+6. OPTIONAL: Add CameraFollow script for runtime control
+   - Add CameraFollow.cs to the PlayerCamera GameObject
+   - Set Follow Target to Player in Inspector
+   - Script will configure Position/Rotation Composer settings
+
+
+PHASE 3: ENEMY SETUP
+========================================
+
+1. CREATE ENEMY PREFAB
+   - Create new GameObject: "Enemy"
+   - Add primitive: Capsule (child of Enemy)
+   - Scale Capsule to (0.8, 0.8, 0.8)
+   - Change material color to red
+
+2. ADD ENEMY COMPONENTS
+   - Add Component: Character Controller
+     * Center: (0, 1, 0)
+     * Radius: 0.4
+     * Height: 1.6
+   - Add Component: Enemy AI (script)
+   - Add Component: Enemy Health (script)
+
+3. CONFIGURE ENEMY LAYER
+   - Create new Layer: "Enemy"
+   - Set Enemy GameObject layer to "Enemy"
+   - Set to apply to children when prompted
+
+4. SAVE AS PREFAB
+   - Drag Enemy to /Assets/Prefabs folder
+   - Delete from scene
+
+
+PHASE 4: WAVE SPAWNER SETUP
+========================================
+
+1. CREATE WAVE SPAWNER
+   - Create empty GameObject: "WaveSpawner"
+   - Add Component: Wave Spawner (script)
+
+2. CONFIGURE WAVE SPAWNER
+   - Enemy Prefab: Drag Enemy prefab from Prefabs folder
+   - Player Transform: Drag Player GameObject
+   - Initial Enemies Per Wave: 3
+   - Enemies Increase Per Wave: 2
+   - Time Between Waves: 5
+   - Spawn Radius: 15
+   - Min Spawn Distance: 8
+   - Auto Start Waves: Checked
+
+
+PHASE 5: COMBAT CONFIGURATION
+========================================
+
+1. CONFIGURE PLAYER COMBAT
+   - Attack Damage: 25
+   - Attack Range: 2
+   - Attack Cooldown: 0.5
+   - Enemy Layer: Select "Enemy" layer
+   - Attack Point: Drag AttackPoint child object
+
+2. TEST ATTACK RANGE
+   - Select Player in scene
+   - You should see red wire sphere in Scene view
+   - Adjust range to your preference
+
+
+PHASE 6: UI SETUP (OPTIONAL)
+========================================
+
+1. CREATE CANVAS
+   - GameObject > UI > Canvas
+   - Set to Screen Space - Overlay
+
+2. CREATE HEALTH BAR
+   - Right-click Canvas > UI > Slider
+   - Name: "HealthBar"
+   - Position to top-left corner
+   - Remove Handle Slide Area (not needed)
+   - Fill color: Red/Green
+
+3. CREATE WAVE TEXT
+   - Right-click Canvas > UI > Text - TextMeshPro
+   - Name: "WaveText"
+   - Position to top-right
+   - Text: "Wave: 0"
+   - Font Size: 24
+
+4. CREATE ENEMIES TEXT
+   - Duplicate WaveText
+   - Name: "EnemiesText"
+   - Position below WaveText
+   - Text: "Enemies: 0"
+
+5. ADD GAME UI SCRIPT
+   - Add GameObject: "GameManager"
+   - Add Component: Game UI (script)
+   - Connect all references:
+     * Health Slider: HealthBar
+     * Wave Text: WaveText
+     * Enemies Text: EnemiesText
+     * Player Health: Player's PlayerHealth component
+     * Wave Spawner: WaveSpawner GameObject
+
+
+TESTING
+========================================
+
+1. BASIC MOVEMENT TEST
+   - Enter Play mode
+   - WASD: Move around
+   - Space: Jump
+   - Left Shift: Roll/Dodge
+   - Hold Shift while moving: Sprint
+
+2. COMBAT TEST
+   - Wait for enemies to spawn (Wave 1)
+   - Left Mouse Button: Attack
+   - Approach enemy and attack
+   - Enemy should take damage and die after ~2 hits
+
+3. WAVE SYSTEM TEST
+   - Kill all enemies in wave 1
+   - After 5 seconds, wave 2 spawns with more enemies
+   - Each wave increases enemy count
+
+4. ROLL MECHANIC TEST
+   - Roll while moving: Rolls in movement direction
+   - Roll while standing: Rolls forward
+   - You're invulnerable during roll (if enabled)
+   - 1 second cooldown between rolls
+
+
+TWEAKING FOR FEEL
+========================================
+
+MOVEMENT FEEL:
+- PlayerController > Move Speed: Increase for faster movement
+- PlayerController > Roll Speed: Adjust dodge speed
+- PlayerController > Roll Duration: Shorter = snappier
+
+COMBAT FEEL:
+- PlayerCombat > Attack Range: Increase for easier hits
+- PlayerCombat > Attack Damage: Balance difficulty
+- EnemyAI > Move Speed: Adjust chase intensity
+- EnemyAI > Attack Range: Change enemy aggression
+
+DIFFICULTY:
+- WaveSpawner > Initial Enemies Per Wave: Start easier/harder
+- WaveSpawner > Enemies Increase Per Wave: Ramp up speed
+- WaveSpawner > Time Between Waves: Breathing room
+- PlayerHealth > Max Health: Survivability
+- EnemyAI > Attack Damage: Threat level
+
+
+NEXT STEPS
+========================================
+
+Once basic prototype feels good:
+1. Add attack animations and effects
+2. Add different enemy types
+3. Add power-ups and pickups
+4. Add player abilities/special attacks
+5. Add visual feedback (hit effects, screen shake)
+6. Add sound effects and music
+7. Add game over/victory conditions
+8. Add upgrade/progression system
+
+
+TROUBLESHOOTING
+========================================
+
+Player not moving:
+- Check Player Input component is set up correctly
+- Verify InputSystem_Actions is assigned
+- Check Character Controller is added
+
+Enemies not spawning:
+- Ensure Player has "Player" tag
+- Check Enemy Prefab is assigned to WaveSpawner
+- Verify Auto Start Waves is checked
+
+Camera not following:
+- Check Cinemachine Camera Follow/LookAt targets
+- Ensure Player transform is assigned
+
+Attacks not working:
+- Verify Enemy layer is created and assigned
+- Check Attack Point is positioned correctly
+- Ensure Enemy Layer is selected in PlayerCombat
+
+========================================

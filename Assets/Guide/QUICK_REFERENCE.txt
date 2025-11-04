@@ -1,0 +1,162 @@
+========================================
+ROGUELIKE PROTOTYPE - QUICK REFERENCE
+========================================
+
+SCRIPTS CREATED
+========================================
+
+PLAYER SCRIPTS (/Assets/Scripts/Player):
+├── PlayerController.cs      - Movement, jump, roll mechanics
+├── PlayerHealth.cs          - Health system with invulnerability during roll
+└── PlayerCombat.cs          - Attack system with range detection
+
+ENEMY SCRIPTS (/Assets/Scripts/Enemy):
+├── EnemyAI.cs              - Chase and attack behavior
+└── EnemyHealth.cs          - Enemy health and death
+
+SYSTEM SCRIPTS (/Assets/Scripts/Systems):
+├── WaveSpawner.cs          - Wave-based enemy spawning
+├── GameManager.cs          - Game state, pause, restart
+├── GameUI.cs               - Health bar and wave counter UI
+└── VisualFeedback.cs       - Damage flash effect
+
+
+CONTROLS (DEFAULT)
+========================================
+WASD / Arrow Keys    - Move
+Space                - Jump
+Left Shift           - Roll/Dodge
+Left Mouse / Attack  - Attack
+Hold Shift + Move    - Sprint
+
+
+KEY FEATURES
+========================================
+
+PLAYER MOVEMENT:
+- Isometric camera-relative movement
+- Smooth rotation towards movement direction
+- Jump with customizable height
+- Roll in movement direction (or forward if stationary)
+- Sprint modifier for faster movement
+
+ROLL MECHANIC:
+- Directional dodge with burst of speed
+- Invulnerability during roll (optional)
+- Cooldown system to prevent spam
+- Visual feedback through movement
+
+COMBAT SYSTEM:
+- Melee attack with area detection
+- Adjustable damage, range, and cooldown
+- Layer-based enemy detection
+- Visual feedback on hit
+
+ENEMY AI:
+- Detects player within range
+- Chases player until in stopping distance
+- Attacks when in range
+- Cooldown between attacks
+
+WAVE SYSTEM:
+- Automatic wave spawning
+- Increasing difficulty each wave
+- Spawns enemies around player at safe distance
+- Waits for all enemies to be defeated before next wave
+
+
+QUICK SETUP CHECKLIST
+========================================
+□ Add Character Controller to Player
+□ Add PlayerController, PlayerHealth, PlayerCombat scripts to Player
+□ Add Player Input component and connect events
+□ Set Player tag to "Player"
+□ Create AttackPoint child object under Player
+
+□ Create Cinemachine Camera
+□ Set Follow and LookAt to Player transform
+□ Position for isometric view
+
+□ Create Enemy with Capsule visual
+□ Add Character Controller, EnemyAI, EnemyHealth to Enemy
+□ Create "Enemy" layer and assign
+□ Save as prefab in /Assets/Prefabs
+
+□ Create WaveSpawner GameObject
+□ Add WaveSpawner script
+□ Assign Enemy prefab and Player transform
+
+□ (Optional) Set up UI Canvas with health bar and wave text
+□ (Optional) Add GameUI script and connect references
+
+
+CUSTOMIZATION TIPS
+========================================
+
+FOR FASTER GAMEPLAY:
+- Increase PlayerController.moveSpeed
+- Increase PlayerController.rollSpeed
+- Decrease attack cooldowns
+
+FOR HARDER DIFFICULTY:
+- Increase EnemyAI.moveSpeed
+- Increase EnemyAI.attackDamage
+- Decrease PlayerHealth.maxHealth
+- Increase WaveSpawner.initialEnemiesPerWave
+
+FOR BETTER FEEL:
+- Adjust PlayerController.rotationSpeed for snappier turning
+- Tweak rollDuration for quicker dodges
+- Increase attackRange for more forgiving combat
+- Adjust camera distance and angle to preference
+
+
+DEBUGGING GIZMOS
+========================================
+
+When objects are selected in Scene view:
+- PlayerCombat: Red sphere = attack range
+- EnemyAI: Yellow sphere = detection range, Red sphere = attack range
+- WaveSpawner: Cyan sphere = spawn radius, Green sphere = min spawn distance
+
+
+COMMON ISSUES & FIXES
+========================================
+
+Player not responding to input:
+→ Check Player Input component has InputSystem_Actions assigned
+→ Verify events are connected to script functions
+→ Ensure "Roll" action exists in Input Actions
+
+Camera not following:
+→ Verify Cinemachine Camera has Follow/LookAt set to Player
+→ Check camera position isn't too far
+
+Enemies not attacking:
+→ Ensure Player has "Player" tag
+→ Check enemy detection range in EnemyAI
+→ Verify PlayerHealth component exists on Player
+
+Can't hit enemies:
+→ Create and assign "Enemy" layer
+→ Set Enemy GameObjects to Enemy layer
+→ Select Enemy layer in PlayerCombat.enemyLayer
+
+Roll not working:
+→ Add "Roll" action to InputSystem_Actions
+→ Bind to Left Shift (or desired key)
+→ Connect in Player Input events to PlayerController.OnRoll
+
+
+NEXT DEVELOPMENT PHASES
+========================================
+
+Phase 1 (Current): Core mechanics working
+Phase 2: Visual polish (particles, animations, screen shake)
+Phase 3: More enemy types and variations
+Phase 4: Power-ups and player progression
+Phase 5: Audio (SFX and music)
+Phase 6: UI polish and game flow
+Phase 7: Balance and difficulty tuning
+
+========================================
