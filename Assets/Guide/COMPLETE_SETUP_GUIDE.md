@@ -388,11 +388,20 @@
 ```
 Zone Settings:
 ├─ Zone Index: 0
-├─ Zone Name: "Frontline"
-├─ Is Active: ✓ (checked)
-├─ Perk Multiplier: 0.0
+├─ Spawn Center: Drag DefenseZone_1 itself (or create empty child)
+└─ Spawn Radius: 10
+
+Zone Perks:
+├─ Damage Bonus: 0.0 ← Frontline has no bonus (base zone)
+├─ Attack Speed Bonus: 0.0
+└─ Move Speed Bonus: 0.0
+
+Fallback:
+├─ Next Zone: Drag DefenseZone_2
 └─ Fallback Health Threshold: 0.25
 ```
+
+**Note:** Zone auto-activates if Zone Index is 0!
 
 **DefenseZone_2:**
 ```

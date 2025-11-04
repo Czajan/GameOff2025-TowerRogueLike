@@ -1,10 +1,28 @@
 # Setup Guide Corrections
 
+**⚠️ IMPORTANT: Use the corrected guide instead!**
+
+**Primary Setup Guide:** `/Assets/Guide/CORRECTED_SETUP_GUIDE.md`
+
+---
+
+## Quick Reference
+
+- **📘 CORRECTED_SETUP_GUIDE.md** - Complete corrected setup guide ← **START HERE!**
+- **📄 GUIDE_FIXES_SUMMARY.md** - Overview of all 7 fixes applied
+- **📋 DEFENSEZONE_CORRECT_CONFIG.md** - Detailed DefenseZone configuration guide
+- **📝 GUIDE_CORRECTIONS.md** - This document (technical correction details)
+
+---
+
 ## Summary
 
-The COMPLETE_SETUP_GUIDE.md had several errors where it listed component fields that don't exist in the actual scripts. These fields were either:
+The COMPLETE_SETUP_GUIDE.md had **7 major errors** where it listed component fields that don't exist in the actual scripts. These fields were either:
 1. **Auto-found** by the scripts (using `FindGameObjectWithTag`, `FindFirstObjectByType`, etc.)
 2. **Never existed** in the first place
+3. **Named incorrectly** in the guide
+
+A fully corrected guide (`CORRECTED_SETUP_GUIDE.md`) has been created with all fixes applied.
 
 This document lists all corrections made.
 
@@ -287,20 +305,231 @@ These components **never need manual references** for player/NPC detection:
 
 ---
 
+### 4. DefenseZone Component (Section 6.2)
+
+**❌ INCORRECT (in guide):**
+```
+Zone Settings:
+├─ Zone Index: 0
+├─ Zone Name: "Frontline"      ← DOES NOT EXIST!
+├─ Is Active: ✓ (checked)      ← NOT in Inspector (private field)
+├─ Perk Multiplier: 0.0        ← DOES NOT EXIST!
+└─ Fallback Health Threshold: 0.25
+```
+
+**✅ CORRECTED:**
+```
+Zone Settings:
+├─ Zone Index: 0
+├─ Spawn Center: Drag DefenseZone_1 itself (or create empty child)
+└─ Spawn Radius: 10
+
+Zone Perks:
+├─ Damage Bonus: 0.0 ← Frontline has no bonus (base zone)
+├─ Attack Speed Bonus: 0.0
+└─ Move Speed Bonus: 0.0
+
+Fallback:
+├─ Next Zone: Drag DefenseZone_2
+└─ Fallback Health Threshold: 0.25
+
+Note: Zone auto-activates if Zone Index is 0!
+```
+
+**Why:** `DefenseZone.cs` has completely different fields than the guide showed:
+- ✗ No `zoneName` field exists
+- ✗ `isActive` is private (line 23), not shown in Inspector
+- ✗ No `perkMultiplier` field - instead there are 3 separate bonus fields
+- ✓ Has `spawnCenter` and `spawnRadius` for enemy spawning
+- ✓ Has individual `damageBonus`, `attackSpeedBonus`, `moveSpeedBonus` fields
+
+**Script Evidence:**
+```csharp
+// DefenseZone.cs lines 6-18
+[Header("Zone Settings")]
+[SerializeField] private int zoneIndex = 0;
+[SerializeField] private Transform spawnCenter;
+[SerializeField] private float spawnRadius = 10f;
+
+[Header("Zone Perks")]
+[SerializeField] private float damageBonus = 0f;
+[SerializeField] private float attackSpeedBonus = 0f;
+[SerializeField] private float moveSpeedBonus = 0f;
+
+[Header("Fallback")]
+[SerializeField] private DefenseZone nextZone;
+[SerializeField] private float fallbackHealthThreshold = 0.25f;
+
+// isActive is private, not serialized!
+private bool isActive = false;
+```
+
+**Recommended Zone Values:**
+- **Zone 1 (Frontline):** zoneIndex=0, all bonuses=0, nextZone=DefenseZone_2
+- **Zone 2 (Midline):** zoneIndex=1, damageBonus=0.1, attackSpeedBonus=0.05, nextZone=DefenseZone_3
+- **Zone 3 (Base):** zoneIndex=2, damageBonus=0.2, attackSpeedBonus=0.1, moveSpeedBonus=0.1, nextZone=none
+
+**🔗 See complete configuration guide:** `/Assets/Guide/DEFENSEZONE_CORRECT_CONFIG.md`
+
+---
+
+### 5. DefenseZone Spawn Points (Section 6.3)
+
+**❌ INCORRECT (in guide):**
+```
+## 6.3 Add Spawn Points to Each Zone
+
+For each zone, add 5 spawn points:
+
+**DefenseZone_1:**
+   ├── SpawnPoint1 (Empty GameObject at 30, 0, 30)
+   ├── SpawnPoint2 (Empty GameObject at 25, 0, 30)
+   └── ...
+
+3. Assign to DefenseZone component:
+   - Select DefenseZone_1
+   - Spawn Points: Size 5
+   - Drag each spawn point
+```
+
+**✅ CORRECTED:**
+```
+NO SPAWN POINTS NEEDED!
+
+DefenseZone spawns enemies randomly within a circle.
+Just set:
+- Spawn Center: The DefenseZone GameObject itself
+- Spawn Radius: 10 (or desired radius)
+
+Enemies spawn at random positions automatically.
+```
+
+**Why:** `DefenseZone.cs` has NO spawn points array field! The script calculates random spawn positions:
+
+**Script Evidence:**
+```csharp
+// DefenseZone.cs lines 92-98
+public Vector3 GetSpawnPosition()
+{
+    Vector3 randomCircle = Random.insideUnitCircle * spawnRadius;
+    Vector3 spawnPos = spawnCenter.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+    spawnPos.y = 0;
+    return spawnPos;
+}
+```
+
+The spawning system uses only:
+- `spawnCenter` (Transform) - The center point
+- `spawnRadius` (float) - The radius around center
+
+**No spawn point array exists!**
+
+**If you created spawn points:** Delete them, they're not used.
+
+---
+
+### 6. BaseGate Component (Section 7)
+
+**❌ INCORRECT (in guide):**
+```
+Configure BaseGate:
+   Settings:
+   ├─ Open Position Y: 6
+   ├─ Close Position Y: 2
+   ├─ Animation Speed: 2
+   └─ Gate Transform: (auto-filled)
+```
+
+**✅ CORRECTED:**
+```
+Configure BaseGate:
+   Gate Settings:
+   ├─ Gate Visual: Drag GateVisual GameObject
+   ├─ Gate Collider: Drag BoxCollider component
+   └─ Starts Open: ☑ (checked)
+   
+   Animation:
+   ├─ Open Height: 5 ← How high gate rises (Y offset)
+   └─ Animation Speed: 2
+```
+
+**Why:** `BaseGate.cs` does NOT have "Open Position Y" or "Close Position Y" fields!
+
+**Script Evidence:**
+```csharp
+// BaseGate.cs lines 5-12
+[Header("Gate Settings")]
+[SerializeField] private GameObject gateVisual;
+[SerializeField] private Collider gateCollider;
+[SerializeField] private bool startsOpen = true;
+
+[Header("Animation")]
+[SerializeField] private float openHeight = 5f;
+[SerializeField] private float animationSpeed = 2f;
+
+// Positions calculated automatically in Awake():
+closedPosition = gateVisual.transform.position;
+openPosition = closedPosition + Vector3.up * openHeight;
+```
+
+The script calculates positions automatically:
+- **Closed position** = Current position when script starts
+- **Open position** = Closed position + (0, openHeight, 0)
+
+You set the **offset** (`openHeight`), not absolute positions!
+
+---
+
+### 7. VisualModelAligner Component (Section 4.6 & 5.2)
+
+**❌ INCORRECT (in guide):**
+```
+└─ Model Transform: Drag Model child here
+```
+
+**✅ CORRECTED:**
+```
+└─ Visual Model: Drag Model child here ← Optional, auto-finds child named "Model"
+```
+
+**Why:** Field name is `visualModel`, not "Model Transform". Also auto-finds child named "Model" if not assigned.
+
+---
+
 ## ✅ Summary of Changes
 
-**Files Modified:**
-- `/Assets/Guide/COMPLETE_SETUP_GUIDE.md` - 3 corrections made
+**Files Created:**
+- `/Assets/Guide/CORRECTED_SETUP_GUIDE.md` - Complete corrected setup guide
+- `/Assets/Guide/GUIDE_FIXES_SUMMARY.md` - Overview of all fixes
+- `/Assets/Guide/DEFENSEZONE_CORRECT_CONFIG.md` - Detailed DefenseZone guide
+- `/Assets/Guide/GUIDE_CORRECTIONS.md` - This technical corrections document
 
 **Sections Corrected:**
-1. Section 5.2 - EnemyAI configuration
-2. Section 5.2 - EnemyHealth configuration  
-3. Section 10.3 - PlayerStats configuration
+1. Section 5.2 - EnemyAI configuration (removed non-existent Player reference)
+2. Section 5.2 - EnemyHealth configuration (removed non-existent Events section)
+3. Section 6.2 - DefenseZone configuration (fixed 3 non-existent fields)
+4. Section 6.3 - DefenseZone spawn points (REMOVED - no spawn points array!)
+5. Section 7 - BaseGate configuration (fixed position fields)
+6. Section 10.3 - PlayerStats configuration (removed non-existent Player reference)
+7. Section 4.6 & 5.2 - VisualModelAligner (corrected field name)
+
+**Total Issues Fixed: 7 major errors**
 
 **Impact:**
 - Users will no longer search for non-existent fields
 - Setup time reduced (no need to drag references that are auto-found)
 - Less confusion during setup
+- Correct perk system understanding (3 separate bonuses, not a multiplier)
+- No wasted time creating unused spawn point GameObjects
+- Correct BaseGate animation setup
+- All field names match actual script implementation
+
+**Next Steps:**
+- Use `/Assets/Guide/CORRECTED_SETUP_GUIDE.md` for all new setups
+- Refer to `/Assets/Guide/GUIDE_FIXES_SUMMARY.md` for migration from old guide
+- Reference `/Assets/Guide/DEFENSEZONE_CORRECT_CONFIG.md` for zone configuration
+
+---
 
 ---
 

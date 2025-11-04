@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2084260004282864625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2026755922636784562}
+  - component: {fileID: 396946299879062996}
+  - component: {fileID: 6977166147043209951}
+  - component: {fileID: 8184734533693082506}
+  - component: {fileID: 7167137295441657118}
+  m_Layer: 0
+  m_Name: GameManagers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2026755922636784562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084260004282864625}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &396946299879062996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084260004282864625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68462d90e195344d8db25f383167a47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameProgressionManager
+  currentCurrency: 0
+  currentDefenseZone: 0
+  maxDefenseZones: 3
+  isInBase: 1
+  baseTimerDuration: 40
+  currentBaseTimer: 0
+  OnCurrencyChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDefenseZoneChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnteredBase:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitedBase:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBaseTimerUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDefenseFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDefenseComplete:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6977166147043209951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084260004282864625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d830776296773d64fa061d304659a7cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  baseMoveSpeed: 5
+  baseMaxHealth: 100
+  baseDamage: 10
+  baseCritChance: 0.05
+  baseCritDamage: 1.5
+  baseAttackRange: 2
+  moveSpeedLevel: 0
+  maxHealthLevel: 0
+  damageLevel: 0
+  critChanceLevel: 0
+  critDamageLevel: 0
+  attackRangeLevel: 0
+  moveSpeedPerLevel: 0.5
+  healthPerLevel: 20
+  damagePerLevel: 5
+  critChancePerLevel: 0.05
+  critDamagePerLevel: 0.25
+  attackRangePerLevel: 0.5
+  OnStatsChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8184734533693082506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084260004282864625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7462f6b2b770744b1fdefbf8821200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSystem
+  equippedWeapon: {fileID: 0}
+  OnWeaponChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7167137295441657118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084260004282864625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d990635825dd58c4daf4bb3bccd78c7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeShop
+  availableUpgrades: []
+  availableWeapons: []
+  shopUI: {fileID: 0}
+  OnUpgradePurchased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWeaponPurchased:
+    m_PersistentCalls:
+      m_Calls: []
