@@ -447,4 +447,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VisualModelAligner
   visualModel: {fileID: 1380051239034853825}
   alignOnAwake: 1
-  visualModelHeight: 1
+  visualModelHeight: 1.6

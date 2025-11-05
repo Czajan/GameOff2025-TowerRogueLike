@@ -99,6 +99,21 @@ public class SimpleShopUI : MonoBehaviour
             
             GameObject itemObj = CreateItemButton();
             
+            Transform iconTransform = itemObj.transform.Find("Icon");
+            if (iconTransform != null)
+            {
+                Image iconImage = iconTransform.GetComponent<Image>();
+                if (iconImage != null && weapon.icon != null)
+                {
+                    iconImage.sprite = weapon.icon;
+                    iconImage.enabled = true;
+                }
+                else if (iconImage != null)
+                {
+                    iconImage.enabled = false;
+                }
+            }
+            
             TextMeshProUGUI nameText = itemObj.transform.Find("Name")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI descText = itemObj.transform.Find("Description")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI costText = itemObj.transform.Find("Cost")?.GetComponent<TextMeshProUGUI>();
@@ -137,6 +152,21 @@ public class SimpleShopUI : MonoBehaviour
             
             GameObject itemObj = CreateItemButton();
             
+            Transform iconTransform = itemObj.transform.Find("Icon");
+            if (iconTransform != null)
+            {
+                Image iconImage = iconTransform.GetComponent<Image>();
+                if (iconImage != null && upgrade.icon != null)
+                {
+                    iconImage.sprite = upgrade.icon;
+                    iconImage.enabled = true;
+                }
+                else if (iconImage != null)
+                {
+                    iconImage.enabled = false;
+                }
+            }
+            
             TextMeshProUGUI nameText = itemObj.transform.Find("Name")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI descText = itemObj.transform.Find("Description")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI costText = itemObj.transform.Find("Cost")?.GetComponent<TextMeshProUGUI>();
@@ -168,7 +198,36 @@ public class SimpleShopUI : MonoBehaviour
     
     private GameObject CreateItemButton()
     {
+        if (itemButtonPrefab == null)
+        {
+            Debug.LogError("itemButtonPrefab is NULL! Cannot create item button.");
+            return null;
+        }
+        
+        if (itemListContainer == null)
+        {
+            Debug.LogError("itemListContainer is NULL! Cannot parent item button.");
+            return null;
+        }
+        
         GameObject itemObj = Instantiate(itemButtonPrefab, itemListContainer);
+        
+        if (itemObj == null)
+        {
+            Debug.LogError("Failed to instantiate itemButtonPrefab!");
+            return null;
+        }
+        
+        Debug.Log($"Created button: {itemObj.name}, parent: {itemListContainer.name}, active: {itemObj.activeSelf}");
+        
+        LayoutElement layoutElement = itemObj.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = itemObj.AddComponent<LayoutElement>();
+        }
+        layoutElement.preferredHeight = 80;
+        layoutElement.minHeight = 80;
+        
         return itemObj;
     }
     

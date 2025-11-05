@@ -667,6 +667,14 @@ PrefabInstance:
       propertyPath: m_Colors.m_NormalColor.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 604218553105097378, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 604218553105097378, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
+      propertyPath: m_ChildForceExpandHeight
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 690745528514966811, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -748,7 +756,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1076939865425818992, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076939865425818992, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076939865425818992, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076939865425818992, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076939865425818992, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1584750344179813654, guid: 1ff02ad319a1a7040a3810fabe5fa970, type: 3}
@@ -863,6 +887,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2318345463561831130, guid: 0b2771c8814f3b24baf72c217e6cd9f6, type: 3}
+      propertyPath: m_Center.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2605203774712707426, guid: 0b2771c8814f3b24baf72c217e6cd9f6, type: 3}
+      propertyPath: visualModelHeight
+      value: 1.6
+      objectReference: {fileID: 0}
     - target: {fileID: 7603797093342593862, guid: 0b2771c8814f3b24baf72c217e6cd9f6, type: 3}
       propertyPath: m_Name
       value: Player
