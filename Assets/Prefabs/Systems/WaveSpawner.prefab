@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5688333730035936506}
   - component: {fileID: 6747899694983260911}
+  - component: {fileID: 750564157140023630}
   m_Layer: 0
   m_Name: WaveSpawner
   m_TagString: Untagged
@@ -45,10 +46,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveSpawner
   enemyPrefab: {fileID: 2309512807537620721, guid: 8c8a9cefe063db84289e4c673a1cf429, type: 3}
-  initialEnemiesPerWave: 3
+  initialEnemiesPerWave: 5
   enemiesIncreasePerWave: 2
   timeBetweenWaves: 5
-  spawnRadius: 15
+  wavesPerSession: 10
+  globalSpawnPoint: {fileID: 0}
+  spawnRadius: 10
   playerTransform: {fileID: 0}
-  minSpawnDistance: 8
+  minSpawnDistance: 0
+  waveController: {fileID: 0}
+  activeDefenseZone: {fileID: 0}
   autoStartWaves: 0
+--- !u!114 &750564157140023630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2201624926598011126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba592f5278a0bf4d922b77c00ab6f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveSpawnerDebug
+  waveSpawner: {fileID: 6747899694983260911}

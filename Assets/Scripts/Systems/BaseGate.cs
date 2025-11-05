@@ -5,7 +5,7 @@ public class BaseGate : MonoBehaviour
     [Header("Gate Settings")]
     [SerializeField] private GameObject gateVisual;
     [SerializeField] private Collider gateCollider;
-    [SerializeField] private bool startsOpen = true;
+    [SerializeField] private bool startsOpen = false;
     
     [Header("Animation")]
     [SerializeField] private float openHeight = 5f;
@@ -38,8 +38,8 @@ public class BaseGate : MonoBehaviour
     {
         if (GameProgressionManager.Instance != null)
         {
-            GameProgressionManager.Instance.OnEnteredBase.AddListener(OpenGate);
-            GameProgressionManager.Instance.OnExitedBase.AddListener(CloseGate);
+            GameProgressionManager.Instance.OnEnteredBase.AddListener(CloseGate);
+            GameProgressionManager.Instance.OnExitedBase.AddListener(OpenGate);
         }
     }
     
@@ -65,7 +65,7 @@ public class BaseGate : MonoBehaviour
             gateCollider.enabled = false;
         }
         
-        Debug.Log("Gate opened!");
+        Debug.Log("Gate opened - wave starting!");
     }
     
     public void CloseGate()
@@ -78,7 +78,7 @@ public class BaseGate : MonoBehaviour
             gateCollider.enabled = true;
         }
         
-        Debug.Log("Gate closed - wave started!");
+        Debug.Log("Gate closed - returned to base!");
     }
     
     public bool IsOpen => isOpen;

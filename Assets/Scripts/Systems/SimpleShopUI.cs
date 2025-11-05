@@ -218,16 +218,6 @@ public class SimpleShopUI : MonoBehaviour
             return null;
         }
         
-        Debug.Log($"Created button: {itemObj.name}, parent: {itemListContainer.name}, active: {itemObj.activeSelf}");
-        
-        LayoutElement layoutElement = itemObj.GetComponent<LayoutElement>();
-        if (layoutElement == null)
-        {
-            layoutElement = itemObj.AddComponent<LayoutElement>();
-        }
-        layoutElement.preferredHeight = 80;
-        layoutElement.minHeight = 80;
-        
         return itemObj;
     }
     

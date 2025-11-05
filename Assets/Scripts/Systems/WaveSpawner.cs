@@ -4,24 +4,47 @@ using System.Collections.Generic;
 
 public class WaveSpawner : MonoBehaviour
 {
+    public static WaveSpawner Instance { get; private set; }
+    
     [Header("Wave Settings")]
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int initialEnemiesPerWave = 3;
     [SerializeField] private float enemiesIncreasePerWave = 2f;
     [SerializeField] private float timeBetweenWaves = 5f;
+    [SerializeField] private int wavesPerSession = 10;
     
     [Header("Spawn Settings")]
+    [SerializeField] private Transform globalSpawnPoint;
     [SerializeField] private float spawnRadius = 15f;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private float minSpawnDistance = 8f;
+    [SerializeField] private WaveController waveController;
+    
+    [Header("Defense Zones")]
+    [SerializeField] private DefenseZone activeDefenseZone;
     
     [Header("Debug")]
     [SerializeField] private bool autoStartWaves = true;
     
     private int currentWave = 0;
+    private int wavesCompletedThisSession = 0;
     private int enemiesAlive = 0;
     private bool isSpawning = false;
+    private bool sessionComplete = false;
     private List<GameObject> activeEnemies = new List<GameObject>();
+    
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
     
     private void Start()
     {
@@ -31,6 +54,25 @@ public class WaveSpawner : MonoBehaviour
             if (player != null)
             {
                 playerTransform = player.transform;
+            }
+        }
+        
+        if (waveController == null)
+        {
+            waveController = FindFirstObjectByType<WaveController>();
+        }
+        
+        if (activeDefenseZone == null)
+        {
+            DefenseZone[] zones = FindObjectsByType<DefenseZone>(FindObjectsSortMode.None);
+            foreach (DefenseZone zone in zones)
+            {
+                if (zone.IsActive)
+                {
+                    activeDefenseZone = zone;
+                    Debug.Log($"WaveSpawner: Found active zone {zone.ZoneIndex + 1}");
+                    break;
+                }
             }
         }
         
@@ -53,12 +95,27 @@ public class WaveSpawner : MonoBehaviour
     
     private IEnumerator WaveRoutine()
     {
-        while (true)
+        isSpawning = true;
+        Debug.Log($"Starting wave session! Target: {wavesPerSession} waves");
+        
+        while (wavesCompletedThisSession < wavesPerSession)
         {
-            yield return new WaitForSeconds(timeBetweenWaves);
             yield return StartCoroutine(SpawnWave());
-            yield return new WaitUntil(() => enemiesAlive == 0);
+            
+            wavesCompletedThisSession++;
+            Debug.Log($"Wave {currentWave} spawned! Session progress: {wavesCompletedThisSession}/{wavesPerSession}. Enemies alive: {enemiesAlive}");
+            
+            if (wavesCompletedThisSession >= wavesPerSession)
+            {
+                CompleteSession();
+                break;
+            }
+            
+            yield return new WaitForSeconds(timeBetweenWaves);
         }
+        
+        isSpawning = false;
+        Debug.Log("Wave routine ended. isSpawning = false");
     }
     
     private IEnumerator SpawnWave()
@@ -68,7 +125,14 @@ public class WaveSpawner : MonoBehaviour
         
         int enemiesToSpawn = Mathf.RoundToInt(initialEnemiesPerWave + (currentWave - 1) * enemiesIncreasePerWave);
         
-        Debug.Log($"Starting Wave {currentWave} with {enemiesToSpawn} enemies!");
+        if (enemiesAlive > 0)
+        {
+            Debug.Log($"<color=orange>Starting Wave {currentWave} with {enemiesToSpawn} enemies! ({enemiesAlive} enemies from previous waves still alive)</color>");
+        }
+        else
+        {
+            Debug.Log($"Starting Wave {currentWave} with {enemiesToSpawn} enemies!");
+        }
         
         for (int i = 0; i < enemiesToSpawn; i++)
         {
@@ -95,21 +159,48 @@ public class WaveSpawner : MonoBehaviour
             if (Mathf.Approximately(enemyController.center.y, 0f))
             {
                 spawnPosition.y = enemyController.height / 2f;
-                Debug.Log($"Spawning enemy at Y={spawnPosition.y} (adjusted for center=0, height={enemyController.height})");
-            }
-            else
-            {
-                Debug.Log($"Spawning enemy at Y={spawnPosition.y} (center.y={enemyController.center.y}, height={enemyController.height})");
             }
         }
         
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
         activeEnemies.Add(enemy);
         enemiesAlive++;
+        
+        if (activeDefenseZone != null)
+        {
+            EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+            if (enemyAI != null)
+            {
+                enemyAI.SetDefenseZone(activeDefenseZone);
+            }
+        }
     }
     
     private Vector3 GetRandomSpawnPosition()
     {
+        Vector3 basePosition;
+        
+        if (globalSpawnPoint != null)
+        {
+            basePosition = globalSpawnPoint.position;
+        }
+        else if (activeDefenseZone != null)
+        {
+            basePosition = activeDefenseZone.GetCenterPosition();
+        }
+        else if (waveController != null)
+        {
+            basePosition = waveController.GetSpawnPosition();
+        }
+        else if (playerTransform != null)
+        {
+            basePosition = playerTransform.position;
+        }
+        else
+        {
+            basePosition = Vector3.zero;
+        }
+        
         Vector3 spawnPosition;
         int attempts = 0;
         const int maxAttempts = 30;
@@ -117,35 +208,85 @@ public class WaveSpawner : MonoBehaviour
         do
         {
             Vector2 randomCircle = Random.insideUnitCircle.normalized * spawnRadius;
-            spawnPosition = playerTransform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+            spawnPosition = basePosition + new Vector3(randomCircle.x, 0, randomCircle.y);
             spawnPosition.y = 0;
             attempts++;
         }
-        while (Vector3.Distance(spawnPosition, playerTransform.position) < minSpawnDistance && attempts < maxAttempts);
+        while (playerTransform != null && 
+               Vector3.Distance(spawnPosition, playerTransform.position) < minSpawnDistance && 
+               attempts < maxAttempts);
         
         return spawnPosition;
     }
     
+    public void SetActiveZone(DefenseZone zone)
+    {
+        activeDefenseZone = zone;
+        Debug.Log($"<color=yellow>WaveSpawner: Zone changed to {zone.ZoneIndex + 1}. Enemies will now spawn there.</color>");
+    }
+    
     public void StartWaves()
     {
-        if (!isSpawning)
+        if (!isSpawning && !sessionComplete)
         {
+            sessionComplete = false;
+            wavesCompletedThisSession = 0;
             StartCoroutine(WaveRoutine());
+            Debug.Log("StartWaves() called - beginning new wave session");
+        }
+        else if (sessionComplete)
+        {
+            Debug.Log("StartWaves() called but session already complete! Ignoring.");
+        }
+        else
+        {
+            Debug.Log("StartWaves() called but waves already spawning! Ignoring.");
         }
     }
     
-    private void OnDrawGizmosSelected()
+    private void CompleteSession()
     {
-        if (playerTransform == null)
-            return;
+        sessionComplete = true;
+        Debug.Log($"Wave session complete! Completed {wavesCompletedThisSession} waves. Total waves: {currentWave}. Return to base!");
         
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(playerTransform.position, spawnRadius);
-        
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(playerTransform.position, minSpawnDistance);
+        if (GameProgressionManager.Instance != null)
+        {
+            GameProgressionManager.Instance.OnWaveSessionComplete();
+        }
+    }
+    
+    public void ResetSession()
+    {
+        wavesCompletedThisSession = 0;
+        sessionComplete = false;
+        Debug.Log($"Session reset. Ready for next wave session. Current wave: {currentWave}");
     }
     
     public int CurrentWave => currentWave;
+    public int WavesCompletedThisSession => wavesCompletedThisSession;
+    public bool IsSessionComplete => sessionComplete;
     public int EnemiesAlive => enemiesAlive;
+    
+    private void OnDrawGizmosSelected()
+    {
+        if (globalSpawnPoint != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(globalSpawnPoint.position, spawnRadius);
+            
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(globalSpawnPoint.position, 0.5f);
+            
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(globalSpawnPoint.position, minSpawnDistance);
+        }
+        else if (playerTransform != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(playerTransform.position, spawnRadius);
+            
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(playerTransform.position, minSpawnDistance);
+        }
+    }
 }

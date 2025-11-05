@@ -62,7 +62,7 @@ public class DebugShopTester : MonoBehaviour
     {
         if (GameProgressionManager.Instance != null)
         {
-            GameProgressionManager.Instance.AddCurrency(100);
+            GameProgressionManager.Instance.AddCurrency(10000);
             Debug.Log("✓ Added 100 currency for testing!");
         }
     }

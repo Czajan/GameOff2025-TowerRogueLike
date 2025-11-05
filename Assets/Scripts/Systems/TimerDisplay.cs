@@ -12,9 +12,20 @@ public class TimerDisplay : MonoBehaviour
             GameProgressionManager.Instance.OnBaseTimerUpdate.AddListener(UpdateTimer);
             GameProgressionManager.Instance.OnEnteredBase.AddListener(ShowTimer);
             GameProgressionManager.Instance.OnExitedBase.AddListener(HideTimer);
+            
+            if (GameProgressionManager.Instance.IsInBase)
+            {
+                ShowTimer();
+            }
+            else
+            {
+                HideTimer();
+            }
         }
-        
-        HideTimer();
+        else
+        {
+            HideTimer();
+        }
     }
     
     private void UpdateTimer(float timeRemaining)

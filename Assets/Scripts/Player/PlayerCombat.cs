@@ -81,7 +81,14 @@ public class PlayerCombat : MonoBehaviour
         if (context.performed && attackTimer <= 0)
         {
             PerformAttack();
-            attackTimer = attackCooldown;
+            
+            float finalCooldown = attackCooldown;
+            if (PlayerStats.Instance != null)
+            {
+                finalCooldown /= PlayerStats.Instance.GetAttackSpeedMultiplier();
+            }
+            
+            attackTimer = finalCooldown;
         }
     }
     

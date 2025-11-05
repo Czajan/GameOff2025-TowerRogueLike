@@ -14,8 +14,10 @@ public class GameProgressionManager : MonoBehaviour
     
     [Header("Game State")]
     [SerializeField] private bool isInBase = true;
-    [SerializeField] private float baseTimerDuration = 40f;
+    [SerializeField] private float baseTimerDuration = 45f;
     [SerializeField] private float currentBaseTimer = 0f;
+    
+    private bool waveSessionActive = false;
     
     [Header("Events")]
     public UnityEvent<int> OnCurrencyChanged = new UnityEvent<int>();
@@ -39,16 +41,32 @@ public class GameProgressionManager : MonoBehaviour
         }
     }
     
+    private void Start()
+    {
+        if (isInBase)
+        {
+            currentBaseTimer = baseTimerDuration;
+            OnBaseTimerUpdate?.Invoke(currentBaseTimer);
+            Debug.Log($"Game started! Base timer initialized: {currentBaseTimer} seconds");
+        }
+    }
+    
     private void Update()
     {
         if (isInBase && currentBaseTimer > 0f)
         {
             currentBaseTimer -= Time.deltaTime;
-            OnBaseTimerUpdate?.Invoke(currentBaseTimer);
             
             if (currentBaseTimer <= 0f)
             {
+                currentBaseTimer = 0f;
+                OnBaseTimerUpdate?.Invoke(currentBaseTimer);
+                Debug.Log("Base timer reached 0! Force starting wave...");
                 ForceStartWave();
+            }
+            else
+            {
+                OnBaseTimerUpdate?.Invoke(currentBaseTimer);
             }
         }
     }
@@ -78,6 +96,18 @@ public class GameProgressionManager : MonoBehaviour
         currentBaseTimer = baseTimerDuration;
         OnEnteredBase?.Invoke();
         OnBaseTimerUpdate?.Invoke(currentBaseTimer);
+        
+        if (waveSessionActive)
+        {
+            WaveSpawner spawner = FindFirstObjectByType<WaveSpawner>();
+            if (spawner != null)
+            {
+                spawner.ResetSession();
+            }
+            waveSessionActive = false;
+        }
+        
+        Debug.Log("Entered base! Timer started for next wave session.");
     }
     
     public void ExitBase()
@@ -86,7 +116,11 @@ public class GameProgressionManager : MonoBehaviour
         
         isInBase = false;
         currentBaseTimer = 0f;
+        waveSessionActive = true;
+        
         OnExitedBase?.Invoke();
+        
+        Debug.Log("Exited base! Wave session starting...");
     }
     
     private void ForceStartWave()
@@ -122,6 +156,17 @@ public class GameProgressionManager : MonoBehaviour
         int bonusCurrency = 100 * bonusMultiplier;
         AddCurrency(bonusCurrency);
         Debug.Log($"Defense complete! Bonus: {bonusCurrency} (held {bonusMultiplier} zones)");
+    }
+    
+    public void OnWaveSessionComplete()
+    {
+        Debug.Log("=== WAVE SESSION COMPLETE! Return to base for upgrades! ===");
+        
+        NotificationUI notification = FindFirstObjectByType<NotificationUI>();
+        if (notification != null)
+        {
+            notification.ShowNotification("Wave Session Complete! Return to base for upgrades!");
+        }
     }
     
     public int Currency => currentCurrency;

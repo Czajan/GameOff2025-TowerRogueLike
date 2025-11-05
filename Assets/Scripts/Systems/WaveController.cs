@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public class WaveController : MonoBehaviour
 {
+    public static WaveController Instance { get; private set; }
+    
     [Header("References")]
     [SerializeField] private WaveSpawner waveSpawner;
     [SerializeField] private DefenseZone[] defenseZones;
@@ -12,9 +14,23 @@ public class WaveController : MonoBehaviour
     
     public UnityEvent OnWaveStarted = new UnityEvent();
     public UnityEvent OnWaveCompleted = new UnityEvent();
+    public UnityEvent OnSessionComplete = new UnityEvent();
     
     private bool waveInProgress = false;
     private DefenseZone currentZone;
+    
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
     
     private void Start()
     {
@@ -42,9 +58,12 @@ public class WaveController : MonoBehaviour
     
     private void Update()
     {
-        if (waveInProgress && waveSpawner.EnemiesAlive == 0)
+        if (waveInProgress && waveSpawner != null)
         {
-            CompleteWave();
+            if (waveSpawner.IsSessionComplete)
+            {
+                CompleteSession();
+            }
         }
     }
     
@@ -55,28 +74,34 @@ public class WaveController : MonoBehaviour
         waveInProgress = true;
         currentZone = GetActiveZone();
         
+        if (waveSpawner != null)
+        {
+            waveSpawner.StartWaves();
+        }
+        
         OnWaveStarted?.Invoke();
-        Debug.Log($"Wave started at {currentZone?.name ?? "default location"}");
+        Debug.Log($"Wave session started at {currentZone?.name ?? "default location"}");
     }
     
-    private void CompleteWave()
+    private void CompleteSession()
     {
         waveInProgress = false;
         
         OnWaveCompleted?.Invoke();
+        OnSessionComplete?.Invoke();
         
         if (GameProgressionManager.Instance != null)
         {
-            int bonusCurrency = CalculateWaveBonus();
+            int bonusCurrency = CalculateSessionBonus();
             if (bonusCurrency > 0)
             {
                 GameProgressionManager.Instance.AddCurrency(bonusCurrency);
-                Debug.Log($"Wave complete! Bonus currency: {bonusCurrency}");
+                Debug.Log($"Wave session complete! Bonus currency: {bonusCurrency}");
             }
         }
     }
     
-    private int CalculateWaveBonus()
+    private int CalculateSessionBonus()
     {
         int baseBonus = 50;
         
@@ -107,7 +132,7 @@ public class WaveController : MonoBehaviour
     {
         if (currentZone != null)
         {
-            return currentZone.GetSpawnPosition();
+            return currentZone.GetCenterPosition();
         }
         
         GameObject player = GameObject.FindGameObjectWithTag("Player");

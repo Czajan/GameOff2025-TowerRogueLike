@@ -29,6 +29,11 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float critDamagePerLevel = 0.25f;
     [SerializeField] private float attackRangePerLevel = 0.5f;
     
+    [Header("Zone Bonuses")]
+    private float zoneDamageBonus = 0f;
+    private float zoneAttackSpeedBonus = 0f;
+    private float zoneMoveSpeedBonus = 0f;
+    
     public UnityEvent OnStatsChanged = new UnityEvent();
     
     private void Awake()
@@ -85,6 +90,24 @@ public class PlayerStats : MonoBehaviour
         ApplyStatsToPlayer();
     }
     
+    public void AddZoneBonus(float damageBonus, float attackSpeedBonus, float moveSpeedBonus)
+    {
+        zoneDamageBonus = damageBonus;
+        zoneAttackSpeedBonus = attackSpeedBonus;
+        zoneMoveSpeedBonus = moveSpeedBonus;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void RemoveZoneBonus(float damageBonus, float attackSpeedBonus, float moveSpeedBonus)
+    {
+        zoneDamageBonus -= damageBonus;
+        zoneAttackSpeedBonus -= attackSpeedBonus;
+        zoneMoveSpeedBonus -= moveSpeedBonus;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
     private void ApplyStatsToPlayer()
     {
         PlayerController controller = FindFirstObjectByType<PlayerController>();
@@ -107,12 +130,13 @@ public class PlayerStats : MonoBehaviour
         }
     }
     
-    public float GetMoveSpeed() => baseMoveSpeed + (moveSpeedLevel * moveSpeedPerLevel);
+    public float GetMoveSpeed() => (baseMoveSpeed + (moveSpeedLevel * moveSpeedPerLevel)) * (1f + zoneMoveSpeedBonus);
     public float GetMaxHealth() => baseMaxHealth + (maxHealthLevel * healthPerLevel);
-    public float GetDamage() => baseDamage + (damageLevel * damagePerLevel);
+    public float GetDamage() => (baseDamage + (damageLevel * damagePerLevel)) * (1f + zoneDamageBonus);
     public float GetCritChance() => baseCritChance + (critChanceLevel * critChancePerLevel);
     public float GetCritDamage() => baseCritDamage + (critDamageLevel * critDamagePerLevel);
     public float GetAttackRange() => baseAttackRange + (attackRangeLevel * attackRangePerLevel);
+    public float GetAttackSpeedMultiplier() => 1f + zoneAttackSpeedBonus;
     
     public int GetMoveSpeedLevel() => moveSpeedLevel;
     public int GetMaxHealthLevel() => maxHealthLevel;

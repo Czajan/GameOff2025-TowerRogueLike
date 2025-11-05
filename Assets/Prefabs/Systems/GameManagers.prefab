@@ -52,7 +52,7 @@ MonoBehaviour:
   currentDefenseZone: 0
   maxDefenseZones: 3
   isInBase: 1
-  baseTimerDuration: 40
+  baseTimerDuration: 5
   currentBaseTimer: 0
   OnCurrencyChanged:
     m_PersistentCalls:

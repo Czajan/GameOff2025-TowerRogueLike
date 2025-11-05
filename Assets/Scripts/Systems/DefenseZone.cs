@@ -5,8 +5,9 @@ public class DefenseZone : MonoBehaviour
 {
     [Header("Zone Settings")]
     [SerializeField] private int zoneIndex = 0;
-    [SerializeField] private Transform spawnCenter;
-    [SerializeField] private float spawnRadius = 10f;
+    
+    [Header("Defense Objective")]
+    [SerializeField] private DefenseObjective defenseObjective;
     
     [Header("Zone Perks")]
     [SerializeField] private float damageBonus = 0f;
@@ -15,36 +16,51 @@ public class DefenseZone : MonoBehaviour
     
     [Header("Fallback")]
     [SerializeField] private DefenseZone nextZone;
-    [SerializeField] private float fallbackHealthThreshold = 0.25f;
     
     public UnityEvent OnZoneActivated = new UnityEvent();
     public UnityEvent OnZoneLost = new UnityEvent();
     
     private bool isActive = false;
+    private bool hasBeenDestroyed = false;
     
     private void Start()
     {
+        if (defenseObjective == null)
+        {
+            defenseObjective = GetComponentInChildren<DefenseObjective>();
+        }
+        
         if (zoneIndex == 0)
         {
             ActivateZone();
+        }
+        else if (defenseObjective != null)
+        {
+            defenseObjective.gameObject.SetActive(false);
         }
     }
     
     public void ActivateZone()
     {
         isActive = true;
+        
+        if (defenseObjective != null)
+        {
+            defenseObjective.gameObject.SetActive(true);
+        }
+        
         OnZoneActivated?.Invoke();
-        ApplyZonePerks();
-        Debug.Log($"Defense Zone {zoneIndex + 1} activated! Perks: +{damageBonus * 100}% damage, +{attackSpeedBonus * 100}% attack speed");
+        ApplyZonePerksToPlayer();
+        Debug.Log($"Defense Zone {zoneIndex + 1} activated! Perks: +{damageBonus * 100}% damage, +{attackSpeedBonus * 100}% attack speed, +{moveSpeedBonus * 100}% move speed");
     }
     
-    public void CheckFallback()
+    public void OnObjectiveDestroyed()
     {
-        PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
-        if (playerHealth != null && playerHealth.HealthPercentage <= fallbackHealthThreshold)
-        {
-            FallbackToNextZone();
-        }
+        if (hasBeenDestroyed) return;
+        
+        hasBeenDestroyed = true;
+        RemoveZonePerksFromPlayer();
+        FallbackToNextZone();
     }
     
     private void FallbackToNextZone()
@@ -54,6 +70,21 @@ public class DefenseZone : MonoBehaviour
         isActive = false;
         OnZoneLost?.Invoke();
         
+        Debug.Log($"<color=red>⚠️ ZONE {zoneIndex + 1} LOST! Falling back...</color>");
+        
+        NotificationUI notification = FindFirstObjectByType<NotificationUI>();
+        if (notification != null)
+        {
+            if (nextZone != null)
+            {
+                notification.ShowNotification($"ZONE {zoneIndex + 1} OBJECTIVE DESTROYED! Retreat to Zone {nextZone.ZoneIndex + 1}!");
+            }
+            else
+            {
+                notification.ShowNotification("FINAL OBJECTIVE DESTROYED! GAME OVER!");
+            }
+        }
+        
         if (GameProgressionManager.Instance != null)
         {
             GameProgressionManager.Instance.FallbackToNextZone();
@@ -62,54 +93,66 @@ public class DefenseZone : MonoBehaviour
         if (nextZone != null)
         {
             nextZone.ActivateZone();
-            TeleportPlayerToZone(nextZone);
+            RetargetEnemies(nextZone);
+            
+            if (WaveSpawner.Instance != null)
+            {
+                WaveSpawner.Instance.SetActiveZone(nextZone);
+            }
         }
-    }
-    
-    private void TeleportPlayerToZone(DefenseZone zone)
-    {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        else
         {
-            CharacterController controller = player.GetComponent<CharacterController>();
-            if (controller != null)
-            {
-                controller.enabled = false;
-                player.transform.position = zone.spawnCenter.position;
-                controller.enabled = true;
-            }
-            else
-            {
-                player.transform.position = zone.spawnCenter.position;
-            }
+            Debug.Log("<color=red>⚠️ NO MORE ZONES! GAME OVER!</color>");
         }
     }
     
-    private void ApplyZonePerks()
+    private void RetargetEnemies(DefenseZone targetZone)
     {
+        EnemyAI[] enemies = FindObjectsByType<EnemyAI>(FindObjectsSortMode.None);
+        int retargetedCount = 0;
+        
+        foreach (EnemyAI enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                enemy.SetDefenseZone(targetZone);
+                retargetedCount++;
+            }
+        }
+        
+        if (retargetedCount > 0)
+        {
+            Debug.Log($"<color=yellow>Retargeted {retargetedCount} enemies to Zone {targetZone.zoneIndex + 1}. They will pursue the new objective.</color>");
+        }
     }
     
-    public Vector3 GetSpawnPosition()
+    private void ApplyZonePerksToPlayer()
     {
-        Vector3 randomCircle = Random.insideUnitCircle * spawnRadius;
-        Vector3 spawnPos = spawnCenter.position + new Vector3(randomCircle.x, 0, randomCircle.y);
-        spawnPos.y = 0;
-        return spawnPos;
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.AddZoneBonus(damageBonus, attackSpeedBonus, moveSpeedBonus);
+            Debug.Log($"<color=cyan>Zone perks applied: +{damageBonus * 100}% damage, +{attackSpeedBonus * 100}% attack speed, +{moveSpeedBonus * 100}% move speed</color>");
+        }
+    }
+    
+    private void RemoveZonePerksFromPlayer()
+    {
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.RemoveZoneBonus(damageBonus, attackSpeedBonus, moveSpeedBonus);
+            Debug.Log($"<color=orange>Zone perks removed</color>");
+        }
+    }
+    
+    public Vector3 GetCenterPosition()
+    {
+        return transform.position;
     }
     
     public bool IsActive => isActive;
     public float DamageBonus => damageBonus;
     public float AttackSpeedBonus => attackSpeedBonus;
     public float MoveSpeedBonus => moveSpeedBonus;
-    
-    private void OnDrawGizmosSelected()
-    {
-        if (spawnCenter == null) return;
-        
-        Gizmos.color = isActive ? Color.green : Color.yellow;
-        Gizmos.DrawWireSphere(spawnCenter.position, spawnRadius);
-        
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(spawnCenter.position, 0.5f);
-    }
+    public int ZoneIndex => zoneIndex;
+    public DefenseObjective GetDefenseObjective() => defenseObjective;
 }
