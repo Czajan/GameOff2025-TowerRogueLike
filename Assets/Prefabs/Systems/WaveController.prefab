@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveController
   waveSpawner: {fileID: 0}
-  defenseZones: []
+  defenseZones:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   waitForBaseExit: 1
   OnWaveStarted:
     m_PersistentCalls:

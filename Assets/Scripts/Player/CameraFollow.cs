@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
     [Header("Cinemachine Setup")]
     [SerializeField] private Transform followTarget;
     [SerializeField] private float followDistance = 12f;
-    [SerializeField] private Vector2 screenPosition = new Vector2(0.5f, 0.4f);
+    [SerializeField] private Vector2 screenPosition = new Vector2(0f, 0f);
     
     private CinemachineCamera virtualCamera;
     

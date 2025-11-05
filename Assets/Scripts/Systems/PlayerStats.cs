@@ -114,6 +114,13 @@ public class PlayerStats : MonoBehaviour
     public float GetCritDamage() => baseCritDamage + (critDamageLevel * critDamagePerLevel);
     public float GetAttackRange() => baseAttackRange + (attackRangeLevel * attackRangePerLevel);
     
+    public int GetMoveSpeedLevel() => moveSpeedLevel;
+    public int GetMaxHealthLevel() => maxHealthLevel;
+    public int GetDamageLevel() => damageLevel;
+    public int GetCritChanceLevel() => critChanceLevel;
+    public int GetCritDamageLevel() => critDamageLevel;
+    public int GetAttackRangeLevel() => attackRangeLevel;
+    
     public bool RollCritical()
     {
         return Random.value < GetCritChance();

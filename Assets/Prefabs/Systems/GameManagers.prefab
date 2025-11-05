@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6977166147043209951}
   - component: {fileID: 8184734533693082506}
   - component: {fileID: 6778533399408582201}
+  - component: {fileID: 4314174989482880266}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -119,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea7462f6b2b770744b1fdefbf8821200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponSystem
-  equippedWeapon: {fileID: 0}
+  equippedWeapon: {fileID: 11400000, guid: aa2c5517f857ca548ba9a4243250a3d2, type: 2}
   OnWeaponChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -138,3 +139,27 @@ MonoBehaviour:
   isPaused: 0
   playerHealth: {fileID: 0}
   waveSpawner: {fileID: 0}
+--- !u!114 &4314174989482880266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084260004282864625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dda95dcae1a90e4d96f586288e4454e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugShopTester
+  upgradesForTesting:
+  - {fileID: 11400000, guid: 010ffb25a1ddf2948903a1f5b33f626e, type: 2}
+  - {fileID: 11400000, guid: acdff7308e015bf42ad429160336f37a, type: 2}
+  - {fileID: 11400000, guid: 6aad185ebf295f24cb028df63ab0da26, type: 2}
+  - {fileID: 11400000, guid: fc2acf8d616367b42a85e8997d13529e, type: 2}
+  - {fileID: 11400000, guid: e8e30387b5bb5e54f850b6d99885ae4e, type: 2}
+  - {fileID: 11400000, guid: ce2a096ab24fbf1478a4ac49e0a25111, type: 2}
+  weaponsForTesting:
+  - {fileID: 11400000, guid: 76321d8e236a5704ab1f39829d9c6445, type: 2}
+  - {fileID: 11400000, guid: ddf13505b32fd914b9d6f71a56d8cd37, type: 2}
+  - {fileID: 11400000, guid: 2d0b8efc089679145b8774c83617fd58, type: 2}
+  - {fileID: 11400000, guid: 0081da568c18f2448aab7b44d281cdaa, type: 2}

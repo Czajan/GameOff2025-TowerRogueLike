@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public enum ShopNPCType
 {
@@ -24,7 +25,7 @@ public class ShopNPC : MonoBehaviour
     
     [Header("UI References")]
     [SerializeField] private GameObject interactionPrompt;
-    [SerializeField] private GameObject shopUI;
+    [SerializeField] private SimpleShopUI shopUI;
     
     [Header("Visual Feedback")]
     [SerializeField] private Transform interactionIndicator;
@@ -59,7 +60,7 @@ public class ShopNPC : MonoBehaviour
         
         if (shopUI != null)
         {
-            shopUI.SetActive(false);
+            shopUI.gameObject.SetActive(false);
         }
         
         if (interactionIndicator != null)
@@ -85,14 +86,17 @@ public class ShopNPC : MonoBehaviour
             OnPlayerExitedRange();
         }
         
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (Keyboard.current != null)
         {
-            ToggleShop();
-        }
-        
-        if (shopOpen && Input.GetKeyDown(KeyCode.Escape))
-        {
-            CloseShop();
+            if (playerInRange && Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                ToggleShop();
+            }
+            
+            if (shopOpen && Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                CloseShop();
+            }
         }
     }
     
@@ -160,11 +164,10 @@ public class ShopNPC : MonoBehaviour
     
     public void OpenShop()
     {
-        if (shopUI != null)
+        if (shopUI != null && !shopOpen)
         {
-            shopUI.SetActive(true);
             shopOpen = true;
-            Time.timeScale = 0f;
+            shopUI.OpenShop(this);
             Debug.Log($"Opened {npcName}'s shop ({npcType})");
         }
     }
@@ -173,7 +176,7 @@ public class ShopNPC : MonoBehaviour
     {
         if (shopUI != null)
         {
-            shopUI.SetActive(false);
+            shopUI.gameObject.SetActive(false);
             shopOpen = false;
             Time.timeScale = 1f;
             Debug.Log($"Closed {npcName}'s shop");

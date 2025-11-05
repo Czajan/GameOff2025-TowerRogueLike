@@ -17,6 +17,23 @@
 - **Timeline:** 1.8.9
 - **TextMeshPro:** Included in UGUI 2.0.0
 
+### Script Compilation and Verification
+- **CRITICAL: Always verify scripts compile** before adding them as components in Unity
+- **Check Console for Errors:** Open Console window (Ctrl+Shift+C / Cmd+Shift+C) and verify no compilation errors
+- **If script exists but can't be added as component:**
+  1. Check Console for compilation errors (red messages)
+  2. Verify all using statements are correct
+  3. Ensure class name matches file name exactly
+  4. Check that all dependencies (other scripts, enums) exist
+  5. Force recompile: Edit script (add/remove whitespace) and save
+  6. If still broken: Right-click script → Reimport
+- **Common causes of missing script components:**
+  - Compilation errors in the script or its dependencies
+  - Missing enum definitions (e.g., `ShopNPCType`, `UpgradeType`)
+  - Typos in class name vs file name
+  - Missing namespace or using statements
+- **Best Practice:** After creating new scripts, always check Console before trying to use them
+
 ### Architecture Decisions
 - **Input Handling:** Unity Input System with InputActions asset (`InputSystem_Actions.inputactions`)
 - **Input Settings:** Project Settings > Player > Active Input Handling = **"Input System Package (New)"** (REQUIRED - set and confirmed)

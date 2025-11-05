@@ -844,7 +844,13 @@ MonoBehaviour:
   npcName: Trainer
   interactionRange: 3
   availableWeapons: []
-  availableUpgrades: []
+  availableUpgrades:
+  - {fileID: 11400000, guid: 010ffb25a1ddf2948903a1f5b33f626e, type: 2}
+  - {fileID: 11400000, guid: acdff7308e015bf42ad429160336f37a, type: 2}
+  - {fileID: 11400000, guid: 6aad185ebf295f24cb028df63ab0da26, type: 2}
+  - {fileID: 11400000, guid: fc2acf8d616367b42a85e8997d13529e, type: 2}
+  - {fileID: 11400000, guid: e8e30387b5bb5e54f850b6d99885ae4e, type: 2}
+  - {fileID: 11400000, guid: ce2a096ab24fbf1478a4ac49e0a25111, type: 2}
   interactionPrompt: {fileID: 0}
   shopUI: {fileID: 0}
   interactionIndicator: {fileID: 0}
@@ -941,7 +947,11 @@ MonoBehaviour:
   npcType: 0
   npcName: Blacksmith
   interactionRange: 3
-  availableWeapons: []
+  availableWeapons:
+  - {fileID: 11400000, guid: 76321d8e236a5704ab1f39829d9c6445, type: 2}
+  - {fileID: 11400000, guid: ddf13505b32fd914b9d6f71a56d8cd37, type: 2}
+  - {fileID: 11400000, guid: 2d0b8efc089679145b8774c83617fd58, type: 2}
+  - {fileID: 11400000, guid: 0081da568c18f2448aab7b44d281cdaa, type: 2}
   availableUpgrades: []
   interactionPrompt: {fileID: 0}
   shopUI: {fileID: 0}

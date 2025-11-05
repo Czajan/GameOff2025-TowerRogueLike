@@ -1,12 +1,66 @@
-# 🎮 START HERE - Setup Guide Selection
+# 🎮 START HERE - Quick Testing with ScriptableObjects
 
-## Choose Your Guide
+## 🎉 You've Created All ScriptableObjects!
 
-### ✅ New Setup (Recommended)
+Now you can test immediately with **two options**:
 
-**Use:** `/Assets/Guide/CORRECTED_SETUP_GUIDE.md`
+---
 
-This is the **fully corrected, script-verified** complete setup guide for Unity 6.
+## 🚀 **OPTION 1: Debug Mode Testing (FASTEST - 5 minutes)**
+
+Perfect for immediate gameplay testing without building UI.
+
+### Quick Setup:
+
+1. **Select** `/GameManagers` in Hierarchy
+2. **Add Component** → **Debug Shop Tester**
+3. In Inspector, assign:
+   - **Upgrades For Testing** (size 6): Drag all from `/Assets/Data/Upgrades`
+   - **Weapons For Testing** (size 5): Drag all from `/Assets/Data/Weapons`
+
+4. **Assign to NPCs**:
+   - `/Base/NPCs/WeaponVendor` → Available Weapons (5 weapons)
+   - `/Base/NPCs/StatVendor` → Available Upgrades (6 upgrades)
+
+5. **Configure** `/WaveController`:
+   - Defense Zones (3): DefenseZone1, 2, 3
+
+### Test Controls:
+```
+[C] - Add 100 currency
+[1-6] - Buy upgrades (Move Speed, Health, Damage, etc.)
+[L] - Show stats
+[H] - Help
+```
+
+**Enter Play Mode** and press **H** for full controls!
+
+---
+
+## 🎨 **OPTION 2: Full UI Setup (30 minutes)**
+
+Build complete shop interface with visual feedback.
+
+**Follow:** `/Assets/Guide/TESTING_SETUP.md`
+
+Creates:
+- Shop UI panels
+- NPC interaction prompts
+- Buy buttons
+- Currency display
+
+---
+
+## 📚 **Reference Guides**
+
+### For Testing:
+- **`QUICK_TEST_CHECKLIST.md`** - Fast setup checklist
+- **`TESTING_SETUP.md`** - Complete UI setup guide
+- **`DebugShopTester.cs`** - Debug testing script
+
+### For Reference:
+- **`PROJECT_CONTEXT.md`** - Full project documentation
+- **`CORRECTED_SETUP_GUIDE.md`** - Original complete setup
 
 - ✅ All 7 errors fixed
 - ✅ All fields match actual scripts
