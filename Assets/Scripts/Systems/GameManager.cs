@@ -35,7 +35,13 @@ public class GameManager : MonoBehaviour
     private void OnPlayerDeath()
     {
         Debug.Log("Game Over! Player has died.");
-        Invoke(nameof(RestartGame), 2f);
+        
+        if (GameProgressionManager.Instance != null)
+        {
+            GameProgressionManager.Instance.OnRunComplete(false);
+        }
+        
+        Invoke(nameof(RestartGame), 3f);
     }
     
     public void RestartGame()

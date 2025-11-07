@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 5820590345164137288}
   - component: {fileID: 3228986483060360491}
   - component: {fileID: 3449744408028981948}
-  - component: {fileID: 8020550401362153394}
+  - component: {fileID: 633465843047495736}
   m_Layer: 0
   m_Name: DefenseObjective1
   m_TagString: Untagged
@@ -343,7 +343,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!208 &8020550401362153394
+--- !u!208 &633465843047495736
 NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -6,7 +6,9 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float maxHealth = 50f;
     
     [Header("Rewards")]
-    [SerializeField] private int currencyReward = 10;
+    [SerializeField] private int goldReward = 5;
+    [SerializeField] private int xpReward = 10;
+    [SerializeField] private GameObject xpOrbPrefab;
     
     private float currentHealth;
     private EnemyAI enemyAI;
@@ -34,9 +36,28 @@ public class EnemyHealth : MonoBehaviour
     
     private void Die()
     {
-        if (GameProgressionManager.Instance != null)
+        if (CurrencyManager.Instance != null)
         {
-            GameProgressionManager.Instance.AddCurrency(currencyReward);
+            CurrencyManager.Instance.AddGold(goldReward);
+        }
+        
+        if (xpOrbPrefab != null)
+        {
+            GameObject orb = Instantiate(xpOrbPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+            ExperienceOrb orbScript = orb.GetComponent<ExperienceOrb>();
+            if (orbScript != null)
+            {
+                orbScript.Initialize(xpReward);
+            }
+            else
+            {
+                Debug.LogWarning("ExperienceOrb component not found on XP Orb prefab!");
+            }
+        }
+        
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.AddEnemyKill();
         }
         
         if (enemyAI != null)

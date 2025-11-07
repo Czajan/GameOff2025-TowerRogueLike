@@ -8,6 +8,18 @@ public class GameProgressionManager : MonoBehaviour
     [Header("Currency")]
     [SerializeField] private int currentCurrency = 0;
     
+    [Header("Run Tracking")]
+    [SerializeField] private int enemiesKilledThisRun = 0;
+    [SerializeField] private int wavesCompletedThisRun = 0;
+    
+    [Header("Essence Rewards (Meta-Currency)")]
+    [SerializeField] private int essencePerWave = 10;
+    [SerializeField] private int essenceForVictory = 200;
+    [SerializeField] private int essenceZone1Bonus = 100;
+    [SerializeField] private int essenceZone2Bonus = 50;
+    [SerializeField] private int essenceZone3Bonus = 25;
+    [SerializeField] private int minimumEssenceReward = 10;
+    
     [Header("Defense Zones")]
     [SerializeField] private int currentDefenseZone = 0;
     [SerializeField] private int maxDefenseZones = 3;
@@ -48,6 +60,24 @@ public class GameProgressionManager : MonoBehaviour
             currentBaseTimer = baseTimerDuration;
             OnBaseTimerUpdate?.Invoke(currentBaseTimer);
             Debug.Log($"Game started! Base timer initialized: {currentBaseTimer} seconds");
+        }
+        
+        enemiesKilledThisRun = 0;
+        wavesCompletedThisRun = 0;
+        
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.ResetInRunCurrencies();
+        }
+        
+        if (PlayerStats.Instance != null)
+        {
+            PlayerStats.Instance.ResetTemporaryBonuses();
+        }
+        
+        if (ExperienceSystem.Instance != null)
+        {
+            ExperienceSystem.Instance.ResetLevel();
         }
     }
     
@@ -160,6 +190,8 @@ public class GameProgressionManager : MonoBehaviour
     
     public void OnWaveSessionComplete()
     {
+        wavesCompletedThisRun++;
+        
         Debug.Log("=== WAVE SESSION COMPLETE! Return to base for upgrades! ===");
         
         NotificationUI notification = FindFirstObjectByType<NotificationUI>();
@@ -167,6 +199,59 @@ public class GameProgressionManager : MonoBehaviour
         {
             notification.ShowNotification("Wave Session Complete! Return to base for upgrades!");
         }
+    }
+    
+    public void OnRunComplete(bool victory)
+    {
+        if (WaveSpawner.Instance != null)
+        {
+            int wavesCompleted = WaveSpawner.Instance.CurrentWave;
+            if (SaveSystem.Instance != null)
+            {
+                SaveSystem.Instance.UpdateHighestWave(wavesCompleted);
+            }
+        }
+        
+        int goldEarned = CurrencyManager.Instance != null ? CurrencyManager.Instance.Gold : 0;
+        int essenceEarned = CalculateEssenceReward(wavesCompletedThisRun, victory);
+        
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.AddEssence(essenceEarned);
+        }
+        
+        if (SaveSystem.Instance != null)
+        {
+            if (victory)
+            {
+                SaveSystem.Instance.IncrementRunsCompleted();
+            }
+            else
+            {
+                SaveSystem.Instance.IncrementRunsFailed();
+            }
+        }
+        
+        Debug.Log($"<color=cyan>=== RUN COMPLETE ===</color>");
+        Debug.Log($"<color=yellow>Gold Earned This Run: {goldEarned}</color>");
+        Debug.Log($"<color=magenta>Essence (Meta-Currency) Earned: {essenceEarned}</color>");
+        Debug.Log($"<color=green>Waves Completed: {wavesCompletedThisRun}</color>");
+    }
+    
+    private int CalculateEssenceReward(int wavesCompleted, bool victory)
+    {
+        int waveReward = wavesCompleted * essencePerWave;
+        
+        int zoneBonus = 0;
+        if (currentDefenseZone == 0) zoneBonus = essenceZone1Bonus;
+        else if (currentDefenseZone == 1) zoneBonus = essenceZone2Bonus;
+        else if (currentDefenseZone == 2) zoneBonus = essenceZone3Bonus;
+        
+        int victoryBonus = victory ? essenceForVictory : 0;
+        
+        int totalReward = waveReward + zoneBonus + victoryBonus;
+        
+        return Mathf.Max(totalReward, minimumEssenceReward);
     }
     
     public int Currency => currentCurrency;

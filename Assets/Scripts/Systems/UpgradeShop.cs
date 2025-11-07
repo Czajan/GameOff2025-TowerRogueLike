@@ -62,15 +62,15 @@ public class UpgradeShop : MonoBehaviour
         
         int cost = upgrade.GetCostForLevel(currentLevel);
         
-        if (GameProgressionManager.Instance != null && GameProgressionManager.Instance.SpendCurrency(cost))
+        if (CurrencyManager.Instance != null && CurrencyManager.Instance.SpendEssence(cost))
         {
             ApplyUpgrade(upgrade.upgradeType);
             OnUpgradePurchased?.Invoke(upgrade);
-            Debug.Log($"Purchased {upgrade.upgradeName} for {cost} currency!");
+            Debug.Log($"<color=cyan>Purchased {upgrade.upgradeName} for {cost} Essence (meta-currency)!</color>");
             return true;
         }
         
-        Debug.Log($"Not enough currency! Need {cost}");
+        Debug.Log($"Not enough Essence! Need {cost}");
         return false;
     }
     
@@ -105,7 +105,7 @@ public class UpgradeShop : MonoBehaviour
     {
         if (weapon == null) return false;
         
-        if (GameProgressionManager.Instance != null && GameProgressionManager.Instance.SpendCurrency(weapon.purchaseCost))
+        if (CurrencyManager.Instance != null && CurrencyManager.Instance.SpendEssence(weapon.purchaseCost))
         {
             if (WeaponSystem.Instance != null)
             {
@@ -113,11 +113,11 @@ public class UpgradeShop : MonoBehaviour
             }
             
             OnWeaponPurchased?.Invoke(weapon);
-            Debug.Log($"Purchased weapon: {weapon.weaponName} for {weapon.purchaseCost} currency!");
+            Debug.Log($"<color=cyan>Purchased weapon: {weapon.weaponName} for {weapon.purchaseCost} Essence!</color>");
             return true;
         }
         
-        Debug.Log($"Not enough currency! Need {weapon.purchaseCost}");
+        Debug.Log($"Not enough Essence! Need {weapon.purchaseCost}");
         return false;
     }
     

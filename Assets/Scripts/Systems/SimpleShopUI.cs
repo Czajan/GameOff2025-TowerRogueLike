@@ -22,9 +22,9 @@ public class SimpleShopUI : MonoBehaviour
             closeButton.onClick.AddListener(CloseShop);
         }
         
-        if (GameProgressionManager.Instance != null)
+        if (CurrencyManager.Instance != null)
         {
-            GameProgressionManager.Instance.OnCurrencyChanged.AddListener(UpdateCurrencyDisplay);
+            CurrencyManager.Instance.OnEssenceChanged.AddListener(UpdateCurrencyDisplay);
         }
         
         gameObject.SetActive(false);
@@ -46,7 +46,7 @@ public class SimpleShopUI : MonoBehaviour
         }
         
         PopulateShop();
-        UpdateCurrencyDisplay(GameProgressionManager.Instance?.Currency ?? 0);
+        UpdateCurrencyDisplay(CurrencyManager.Instance?.Essence ?? 0);
         
         yield return null;
         
@@ -264,7 +264,7 @@ public class SimpleShopUI : MonoBehaviour
     {
         if (currencyText != null)
         {
-            currencyText.text = $"Currency: ${currency}";
+            currencyText.text = $"Essence: {currency}";
         }
     }
     
@@ -279,9 +279,9 @@ public class SimpleShopUI : MonoBehaviour
     
     private void OnDestroy()
     {
-        if (GameProgressionManager.Instance != null)
+        if (CurrencyManager.Instance != null)
         {
-            GameProgressionManager.Instance.OnCurrencyChanged.RemoveListener(UpdateCurrencyDisplay);
+            CurrencyManager.Instance.OnEssenceChanged.RemoveListener(UpdateCurrencyDisplay);
         }
     }
 }

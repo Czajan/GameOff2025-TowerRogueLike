@@ -34,6 +34,14 @@ public class PlayerStats : MonoBehaviour
     private float zoneAttackSpeedBonus = 0f;
     private float zoneMoveSpeedBonus = 0f;
     
+    [Header("Temporary In-Run Bonuses")]
+    private float tempMaxHealth = 0f;
+    private float tempDamage = 0f;
+    private float tempMoveSpeed = 0f;
+    private float tempCritChance = 0f;
+    private float tempCritDamage = 0f;
+    private float tempAttackSpeed = 0f;
+    
     public UnityEvent OnStatsChanged = new UnityEvent();
     
     private void Awake()
@@ -45,6 +53,43 @@ public class PlayerStats : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
+        }
+    }
+    
+    private void Start()
+    {
+        LoadUpgradeLevelsFromSave();
+        ApplyStatsToPlayer();
+    }
+    
+    private void LoadUpgradeLevelsFromSave()
+    {
+        if (SaveSystem.Instance != null)
+        {
+            moveSpeedLevel = SaveSystem.Instance.GetMoveSpeedLevel();
+            maxHealthLevel = SaveSystem.Instance.GetMaxHealthLevel();
+            damageLevel = SaveSystem.Instance.GetDamageLevel();
+            critChanceLevel = SaveSystem.Instance.GetCritChanceLevel();
+            critDamageLevel = SaveSystem.Instance.GetCritDamageLevel();
+            attackRangeLevel = SaveSystem.Instance.GetAttackRangeLevel();
+            
+            Debug.Log($"Loaded upgrade levels from save: Move={moveSpeedLevel}, Health={maxHealthLevel}, Damage={damageLevel}");
+        }
+    }
+    
+    private void SaveUpgradeLevels()
+    {
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.SaveUpgradeLevels(
+                moveSpeedLevel,
+                maxHealthLevel,
+                damageLevel,
+                critChanceLevel,
+                critDamageLevel,
+                attackRangeLevel
+            );
         }
     }
     
@@ -53,6 +98,7 @@ public class PlayerStats : MonoBehaviour
         moveSpeedLevel++;
         OnStatsChanged?.Invoke();
         ApplyStatsToPlayer();
+        SaveUpgradeLevels();
     }
     
     public void UpgradeMaxHealth()
@@ -60,6 +106,7 @@ public class PlayerStats : MonoBehaviour
         maxHealthLevel++;
         OnStatsChanged?.Invoke();
         ApplyStatsToPlayer();
+        SaveUpgradeLevels();
     }
     
     public void UpgradeDamage()
@@ -67,6 +114,7 @@ public class PlayerStats : MonoBehaviour
         damageLevel++;
         OnStatsChanged?.Invoke();
         ApplyStatsToPlayer();
+        SaveUpgradeLevels();
     }
     
     public void UpgradeCritChance()
@@ -74,6 +122,7 @@ public class PlayerStats : MonoBehaviour
         critChanceLevel++;
         OnStatsChanged?.Invoke();
         ApplyStatsToPlayer();
+        SaveUpgradeLevels();
     }
     
     public void UpgradeCritDamage()
@@ -81,6 +130,7 @@ public class PlayerStats : MonoBehaviour
         critDamageLevel++;
         OnStatsChanged?.Invoke();
         ApplyStatsToPlayer();
+        SaveUpgradeLevels();
     }
     
     public void UpgradeAttackRange()
@@ -88,6 +138,7 @@ public class PlayerStats : MonoBehaviour
         attackRangeLevel++;
         OnStatsChanged?.Invoke();
         ApplyStatsToPlayer();
+        SaveUpgradeLevels();
     }
     
     public void AddZoneBonus(float damageBonus, float attackSpeedBonus, float moveSpeedBonus)
@@ -130,13 +181,13 @@ public class PlayerStats : MonoBehaviour
         }
     }
     
-    public float GetMoveSpeed() => (baseMoveSpeed + (moveSpeedLevel * moveSpeedPerLevel)) * (1f + zoneMoveSpeedBonus);
-    public float GetMaxHealth() => baseMaxHealth + (maxHealthLevel * healthPerLevel);
-    public float GetDamage() => (baseDamage + (damageLevel * damagePerLevel)) * (1f + zoneDamageBonus);
-    public float GetCritChance() => baseCritChance + (critChanceLevel * critChancePerLevel);
-    public float GetCritDamage() => baseCritDamage + (critDamageLevel * critDamagePerLevel);
+    public float GetMoveSpeed() => (baseMoveSpeed + (moveSpeedLevel * moveSpeedPerLevel)) * (1f + zoneMoveSpeedBonus + tempMoveSpeed);
+    public float GetMaxHealth() => baseMaxHealth + (maxHealthLevel * healthPerLevel) + tempMaxHealth;
+    public float GetDamage() => (baseDamage + (damageLevel * damagePerLevel) + tempDamage) * (1f + zoneDamageBonus);
+    public float GetCritChance() => baseCritChance + (critChanceLevel * critChancePerLevel) + tempCritChance;
+    public float GetCritDamage() => baseCritDamage + (critDamageLevel * critDamagePerLevel) + tempCritDamage;
     public float GetAttackRange() => baseAttackRange + (attackRangeLevel * attackRangePerLevel);
-    public float GetAttackSpeedMultiplier() => 1f + zoneAttackSpeedBonus;
+    public float GetAttackSpeedMultiplier() => 1f + zoneAttackSpeedBonus + tempAttackSpeed;
     
     public int GetMoveSpeedLevel() => moveSpeedLevel;
     public int GetMaxHealthLevel() => maxHealthLevel;
@@ -158,5 +209,59 @@ public class PlayerStats : MonoBehaviour
             damage *= GetCritDamage();
         }
         return damage;
+    }
+    
+    public void AddTemporaryMaxHealth(float amount)
+    {
+        tempMaxHealth += amount;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void AddTemporaryDamage(float amount)
+    {
+        tempDamage += amount;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void AddTemporaryMoveSpeed(float multiplier)
+    {
+        tempMoveSpeed += multiplier;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void AddTemporaryCritChance(float amount)
+    {
+        tempCritChance += amount;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void AddTemporaryCritDamage(float multiplier)
+    {
+        tempCritDamage += multiplier;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void AddTemporaryAttackSpeed(float multiplier)
+    {
+        tempAttackSpeed += multiplier;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
+    }
+    
+    public void ResetTemporaryBonuses()
+    {
+        tempMaxHealth = 0f;
+        tempDamage = 0f;
+        tempMoveSpeed = 0f;
+        tempCritChance = 0f;
+        tempCritDamage = 0f;
+        tempAttackSpeed = 0f;
+        OnStatsChanged?.Invoke();
+        ApplyStatsToPlayer();
     }
 }
