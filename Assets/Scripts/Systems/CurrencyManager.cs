@@ -8,11 +8,13 @@ public class CurrencyManager : MonoBehaviour
     [Header("In-Run Currencies")]
     [SerializeField] private int currentGold = 0;
     [SerializeField] private int currentExperience = 0;
+    [SerializeField] private int essenceEarnedThisRun = 0;
     
     [Header("Events")]
     public UnityEvent<int> OnGoldChanged = new UnityEvent<int>();
     public UnityEvent<int> OnExperienceChanged = new UnityEvent<int>();
     public UnityEvent<int> OnEssenceChanged = new UnityEvent<int>();
+    public UnityEvent<int> OnEssenceEarnedThisRunChanged = new UnityEvent<int>();
     
     private void Awake()
     {
@@ -36,6 +38,7 @@ public class CurrencyManager : MonoBehaviour
         
         OnGoldChanged?.Invoke(currentGold);
         OnExperienceChanged?.Invoke(currentExperience);
+        OnEssenceEarnedThisRunChanged?.Invoke(essenceEarnedThisRun);
     }
     
     public void AddGold(int amount)
@@ -73,12 +76,16 @@ public class CurrencyManager : MonoBehaviour
     
     public void AddEssence(int amount)
     {
+        essenceEarnedThisRun += amount;
+        
         if (SaveSystem.Instance != null)
         {
             SaveSystem.Instance.AddEssence(amount);
             OnEssenceChanged?.Invoke(SaveSystem.Instance.GetEssence());
-            Debug.Log($"<color=magenta>+{amount} Essence! Total: {SaveSystem.Instance.GetEssence()}</color>");
+            Debug.Log($"<color=magenta>+{amount} Essence! Run Total: {essenceEarnedThisRun} | Lifetime Total: {SaveSystem.Instance.GetEssence()}</color>");
         }
+        
+        OnEssenceEarnedThisRunChanged?.Invoke(essenceEarnedThisRun);
     }
     
     public bool SpendEssence(int amount)
@@ -98,12 +105,15 @@ public class CurrencyManager : MonoBehaviour
     {
         currentGold = 0;
         currentExperience = 0;
+        essenceEarnedThisRun = 0;
         OnGoldChanged?.Invoke(currentGold);
         OnExperienceChanged?.Invoke(currentExperience);
+        OnEssenceEarnedThisRunChanged?.Invoke(essenceEarnedThisRun);
         Debug.Log("In-run currencies reset for new run.");
     }
     
     public int Gold => currentGold;
     public int Experience => currentExperience;
     public int Essence => SaveSystem.Instance != null ? SaveSystem.Instance.GetEssence() : 0;
+    public int EssenceEarnedThisRun => essenceEarnedThisRun;
 }

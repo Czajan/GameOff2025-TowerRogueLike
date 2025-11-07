@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd5795162bc6694d95abd8330745550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExperienceOrb
-  flySpeed: 10
+  flySpeed: 15
   rotationSpeed: 180
   bobSpeed: 2
   bobHeight: 0.3

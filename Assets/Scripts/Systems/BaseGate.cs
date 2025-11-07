@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class BaseGate : MonoBehaviour
 {
@@ -11,10 +12,17 @@ public class BaseGate : MonoBehaviour
     [SerializeField] private float openHeight = 5f;
     [SerializeField] private float animationSpeed = 2f;
     
+    [Header("Interaction")]
+    [SerializeField] private float interactionRange = 3f;
+    [SerializeField] private KeyCode interactionKey = KeyCode.E;
+    [SerializeField] private TextMeshProUGUI promptText;
+    
     private bool isOpen;
     private Vector3 closedPosition;
     private Vector3 openPosition;
     private Vector3 targetPosition;
+    private Transform playerTransform;
+    private bool canInteract = false;
     
     private void Awake()
     {
@@ -32,14 +40,25 @@ public class BaseGate : MonoBehaviour
         {
             gateCollider.enabled = !isOpen;
         }
+        
+        if (promptText != null)
+        {
+            promptText.gameObject.SetActive(false);
+        }
     }
     
     private void Start()
     {
-        if (GameProgressionManager.Instance != null)
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            GameProgressionManager.Instance.OnEnteredBase.AddListener(CloseGate);
-            GameProgressionManager.Instance.OnExitedBase.AddListener(OpenGate);
+            playerTransform = player.transform;
+        }
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.AddListener(OpenGate);
+            RunStateManager.Instance.OnRunEnded.AddListener(CloseGate);
         }
     }
     
@@ -53,6 +72,49 @@ public class BaseGate : MonoBehaviour
                 animationSpeed * Time.deltaTime
             );
         }
+        
+        if (RunStateManager.Instance != null && RunStateManager.Instance.IsInPreRunMenu)
+        {
+            CheckPlayerProximity();
+            HandleInteraction();
+        }
+        else
+        {
+            if (promptText != null && promptText.gameObject.activeSelf)
+            {
+                promptText.gameObject.SetActive(false);
+            }
+            canInteract = false;
+        }
+    }
+    
+    private void CheckPlayerProximity()
+    {
+        if (playerTransform == null) return;
+        
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        canInteract = distance <= interactionRange && !isOpen;
+        
+        if (promptText != null)
+        {
+            promptText.gameObject.SetActive(canInteract);
+            if (canInteract)
+            {
+                promptText.text = $"Press [{interactionKey}] to Start Run";
+            }
+        }
+    }
+    
+    private void HandleInteraction()
+    {
+        if (canInteract && Input.GetKeyDown(interactionKey))
+        {
+            if (RunStateManager.Instance != null)
+            {
+                RunStateManager.Instance.StartRun();
+                Debug.Log("<color=green>Player clicked gate - Run starting!</color>");
+            }
+        }
     }
     
     public void OpenGate()
@@ -65,7 +127,7 @@ public class BaseGate : MonoBehaviour
             gateCollider.enabled = false;
         }
         
-        Debug.Log("Gate opened - wave starting!");
+        Debug.Log("Gate opened - run starting!");
     }
     
     public void CloseGate()
@@ -78,8 +140,14 @@ public class BaseGate : MonoBehaviour
             gateCollider.enabled = true;
         }
         
-        Debug.Log("Gate closed - returned to base!");
+        Debug.Log("Gate closed - back to pre-run menu!");
     }
     
     public bool IsOpen => isOpen;
+    
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, interactionRange);
+    }
 }

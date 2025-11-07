@@ -26,8 +26,6 @@ public class GameProgressionManager : MonoBehaviour
     
     [Header("Game State")]
     [SerializeField] private bool isInBase = true;
-    [SerializeField] private float baseTimerDuration = 45f;
-    [SerializeField] private float currentBaseTimer = 0f;
     
     private bool waveSessionActive = false;
     
@@ -36,7 +34,6 @@ public class GameProgressionManager : MonoBehaviour
     public UnityEvent<int> OnDefenseZoneChanged = new UnityEvent<int>();
     public UnityEvent OnEnteredBase = new UnityEvent();
     public UnityEvent OnExitedBase = new UnityEvent();
-    public UnityEvent<float> OnBaseTimerUpdate = new UnityEvent<float>();
     public UnityEvent OnDefenseFailed = new UnityEvent();
     public UnityEvent OnDefenseComplete = new UnityEvent();
     
@@ -55,13 +52,6 @@ public class GameProgressionManager : MonoBehaviour
     
     private void Start()
     {
-        if (isInBase)
-        {
-            currentBaseTimer = baseTimerDuration;
-            OnBaseTimerUpdate?.Invoke(currentBaseTimer);
-            Debug.Log($"Game started! Base timer initialized: {currentBaseTimer} seconds");
-        }
-        
         enemiesKilledThisRun = 0;
         wavesCompletedThisRun = 0;
         
@@ -83,22 +73,6 @@ public class GameProgressionManager : MonoBehaviour
     
     private void Update()
     {
-        if (isInBase && currentBaseTimer > 0f)
-        {
-            currentBaseTimer -= Time.deltaTime;
-            
-            if (currentBaseTimer <= 0f)
-            {
-                currentBaseTimer = 0f;
-                OnBaseTimerUpdate?.Invoke(currentBaseTimer);
-                Debug.Log("Base timer reached 0! Force starting wave...");
-                ForceStartWave();
-            }
-            else
-            {
-                OnBaseTimerUpdate?.Invoke(currentBaseTimer);
-            }
-        }
     }
     
     public void AddCurrency(int amount)
@@ -123,9 +97,7 @@ public class GameProgressionManager : MonoBehaviour
         if (isInBase) return;
         
         isInBase = true;
-        currentBaseTimer = baseTimerDuration;
         OnEnteredBase?.Invoke();
-        OnBaseTimerUpdate?.Invoke(currentBaseTimer);
         
         if (waveSessionActive)
         {
@@ -137,7 +109,7 @@ public class GameProgressionManager : MonoBehaviour
             waveSessionActive = false;
         }
         
-        Debug.Log("Entered base! Timer started for next wave session.");
+        Debug.Log("Entered base!");
     }
     
     public void ExitBase()
@@ -145,22 +117,11 @@ public class GameProgressionManager : MonoBehaviour
         if (!isInBase) return;
         
         isInBase = false;
-        currentBaseTimer = 0f;
         waveSessionActive = true;
         
         OnExitedBase?.Invoke();
         
         Debug.Log("Exited base! Wave session starting...");
-    }
-    
-    private void ForceStartWave()
-    {
-        ExitBase();
-        WaveSpawner spawner = FindFirstObjectByType<WaveSpawner>();
-        if (spawner != null)
-        {
-            Debug.Log("Base timer expired! Starting next wave...");
-        }
     }
     
     public void FallbackToNextZone()
@@ -192,12 +153,21 @@ public class GameProgressionManager : MonoBehaviour
     {
         wavesCompletedThisRun++;
         
-        Debug.Log("=== WAVE SESSION COMPLETE! Return to base for upgrades! ===");
+        Debug.Log($"=== WAVE SESSION COMPLETE! {wavesCompletedThisRun} waves completed this run. Return to base for upgrades! ===");
         
         NotificationUI notification = FindFirstObjectByType<NotificationUI>();
         if (notification != null)
         {
-            notification.ShowNotification("Wave Session Complete! Return to base for upgrades!");
+            notification.ShowNotification($"Wave Session Complete! Return to base for upgrades!");
+        }
+    }
+    
+    public void OnIndividualWaveComplete()
+    {
+        if (CurrencyManager.Instance != null)
+        {
+            CurrencyManager.Instance.AddEssence(essencePerWave);
+            Debug.Log($"<color=magenta>Wave cleared! +{essencePerWave} Essence</color>");
         }
     }
     
@@ -213,12 +183,14 @@ public class GameProgressionManager : MonoBehaviour
         }
         
         int goldEarned = CurrencyManager.Instance != null ? CurrencyManager.Instance.Gold : 0;
-        int essenceEarned = CalculateEssenceReward(wavesCompletedThisRun, victory);
+        int bonusEssence = CalculateBonusEssenceReward(victory);
         
-        if (CurrencyManager.Instance != null)
+        if (bonusEssence > 0 && CurrencyManager.Instance != null)
         {
-            CurrencyManager.Instance.AddEssence(essenceEarned);
+            CurrencyManager.Instance.AddEssence(bonusEssence);
         }
+        
+        int totalEssenceEarned = CurrencyManager.Instance != null ? CurrencyManager.Instance.EssenceEarnedThisRun : 0;
         
         if (SaveSystem.Instance != null)
         {
@@ -234,14 +206,14 @@ public class GameProgressionManager : MonoBehaviour
         
         Debug.Log($"<color=cyan>=== RUN COMPLETE ===</color>");
         Debug.Log($"<color=yellow>Gold Earned This Run: {goldEarned}</color>");
-        Debug.Log($"<color=magenta>Essence (Meta-Currency) Earned: {essenceEarned}</color>");
+        Debug.Log($"<color=magenta>Total Essence Earned This Run: {totalEssenceEarned}</color>");
+        Debug.Log($"<color=purple>  - Waves: {wavesCompletedThisRun} × {essencePerWave} = {wavesCompletedThisRun * essencePerWave}</color>");
+        Debug.Log($"<color=purple>  - Bonus: {bonusEssence}</color>");
         Debug.Log($"<color=green>Waves Completed: {wavesCompletedThisRun}</color>");
     }
     
-    private int CalculateEssenceReward(int wavesCompleted, bool victory)
+    private int CalculateBonusEssenceReward(bool victory)
     {
-        int waveReward = wavesCompleted * essencePerWave;
-        
         int zoneBonus = 0;
         if (currentDefenseZone == 0) zoneBonus = essenceZone1Bonus;
         else if (currentDefenseZone == 1) zoneBonus = essenceZone2Bonus;
@@ -249,13 +221,10 @@ public class GameProgressionManager : MonoBehaviour
         
         int victoryBonus = victory ? essenceForVictory : 0;
         
-        int totalReward = waveReward + zoneBonus + victoryBonus;
-        
-        return Mathf.Max(totalReward, minimumEssenceReward);
+        return zoneBonus + victoryBonus;
     }
     
     public int Currency => currentCurrency;
     public int CurrentDefenseZone => currentDefenseZone;
     public bool IsInBase => isInBase;
-    public float BaseTimer => currentBaseTimer;
 }

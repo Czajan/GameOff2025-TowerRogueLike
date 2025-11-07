@@ -17,9 +17,18 @@ public class ExperienceBar : MonoBehaviour
     
     private float targetFillAmount = 0f;
     private float currentFillAmount = 0f;
+    private bool forceImmediateUpdate = false;
     
     private void Start()
     {
+        if (fillImage != null)
+        {
+            fillImage.fillAmount = 0f;
+        }
+        
+        currentFillAmount = 0f;
+        targetFillAmount = 0f;
+        
         if (ExperienceSystem.Instance != null)
         {
             ExperienceSystem.Instance.OnXPChanged.AddListener(UpdateBar);
@@ -44,6 +53,19 @@ public class ExperienceBar : MonoBehaviour
         
         targetFillAmount = Mathf.Clamp01((float)currentXP / requiredXP);
         
+        Debug.Log($"<color=cyan>[XP Bar] UpdateBar: {currentXP}/{requiredXP} = {targetFillAmount:F3} | currentFill={currentFillAmount:F3} | forceImmediate={forceImmediateUpdate}</color>");
+        
+        if (forceImmediateUpdate)
+        {
+            currentFillAmount = 0f;
+            if (fillImage != null)
+            {
+                fillImage.fillAmount = 0f;
+            }
+            forceImmediateUpdate = false;
+            Debug.Log($"<color=yellow>[XP Bar] Force reset to 0</color>");
+        }
+        
         if (!smoothFill && fillImage != null)
         {
             fillImage.fillAmount = targetFillAmount;
@@ -65,8 +87,11 @@ public class ExperienceBar : MonoBehaviour
     
     private void OnLevelUp(int newLevel)
     {
+        Debug.Log($"<color=green>[XP Bar] OnLevelUp: Level {newLevel}</color>");
+        
         currentFillAmount = 0f;
         targetFillAmount = 0f;
+        forceImmediateUpdate = true;
         
         if (fillImage != null)
         {

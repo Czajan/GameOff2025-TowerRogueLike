@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class WaveSpawner : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class WaveSpawner : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int initialEnemiesPerWave = 3;
     [SerializeField] private float enemiesIncreasePerWave = 2f;
-    [SerializeField] private float timeBetweenWaves = 5f;
+    [SerializeField] private float timeBetweenWaves = 30f;
     [SerializeField] private int wavesPerSession = 10;
     
     [Header("Spawn Settings")]
@@ -24,14 +25,16 @@ public class WaveSpawner : MonoBehaviour
     [SerializeField] private DefenseZone activeDefenseZone;
     
     [Header("Debug")]
-    [SerializeField] private bool autoStartWaves = true;
+    [SerializeField] private bool autoStartWaves = false;
     
-    private int currentWave = 0;
-    private int wavesCompletedThisSession = 0;
-    private int enemiesAlive = 0;
+    private int currentWaveNumber = 0;
+    private int wavesSpawned = 0;
     private bool isSpawning = false;
     private bool sessionComplete = false;
-    private List<GameObject> activeEnemies = new List<GameObject>();
+    
+    private Dictionary<int, List<GameObject>> waveEnemies = new Dictionary<int, List<GameObject>>();
+    private Dictionary<int, int> waveEnemyCounts = new Dictionary<int, int>();
+    private HashSet<int> completedWaves = new HashSet<int>();
     
     private void Awake()
     {
@@ -84,66 +87,96 @@ public class WaveSpawner : MonoBehaviour
     
     private void Update()
     {
-        CleanupDestroyedEnemies();
+        CheckWaveCompletion();
     }
     
-    private void CleanupDestroyedEnemies()
+    private void CheckWaveCompletion()
     {
-        activeEnemies.RemoveAll(enemy => enemy == null);
-        enemiesAlive = activeEnemies.Count;
+        List<int> wavesToCheck = new List<int>(waveEnemies.Keys);
+        
+        foreach (int waveNum in wavesToCheck)
+        {
+            if (completedWaves.Contains(waveNum))
+                continue;
+            
+            List<GameObject> enemies = waveEnemies[waveNum];
+            enemies.RemoveAll(enemy => enemy == null);
+            
+            if (enemies.Count == 0 && waveEnemyCounts.ContainsKey(waveNum))
+            {
+                OnWaveCleared(waveNum);
+            }
+        }
+    }
+    
+    private void OnWaveCleared(int waveNum)
+    {
+        completedWaves.Add(waveNum);
+        
+        if (GameProgressionManager.Instance != null && CurrencyManager.Instance != null)
+        {
+            GameProgressionManager.Instance.OnIndividualWaveComplete();
+        }
+        
+        int totalKilled = waveEnemyCounts[waveNum];
+        Debug.Log($"<color=green>✓ Wave {waveNum} CLEARED! All {totalKilled} enemies defeated!</color>");
+        
+        waveEnemies.Remove(waveNum);
+        waveEnemyCounts.Remove(waveNum);
     }
     
     private IEnumerator WaveRoutine()
     {
         isSpawning = true;
-        Debug.Log($"Starting wave session! Target: {wavesPerSession} waves");
+        Debug.Log($"<color=cyan>=== STARTING WAVE SESSION ===</color>");
+        Debug.Log($"Target: {wavesPerSession} waves spawning every {timeBetweenWaves} seconds");
+        Debug.Log($"<color=yellow>Waves will OVERLAP - multiple waves can be active simultaneously!</color>");
         
-        while (wavesCompletedThisSession < wavesPerSession)
+        for (int i = 0; i < wavesPerSession; i++)
         {
-            yield return StartCoroutine(SpawnWave());
+            currentWaveNumber++;
+            wavesSpawned++;
             
-            wavesCompletedThisSession++;
-            Debug.Log($"Wave {currentWave} spawned! Session progress: {wavesCompletedThisSession}/{wavesPerSession}. Enemies alive: {enemiesAlive}");
+            StartCoroutine(SpawnWave(currentWaveNumber));
             
-            if (wavesCompletedThisSession >= wavesPerSession)
+            if (i < wavesPerSession - 1)
             {
-                CompleteSession();
-                break;
+                yield return new WaitForSeconds(timeBetweenWaves);
             }
-            
-            yield return new WaitForSeconds(timeBetweenWaves);
         }
         
+        Debug.Log($"<color=cyan>=== ALL {wavesPerSession} WAVES SPAWNED ===</color>");
+        Debug.Log($"Waiting for all waves to be cleared...");
+        
+        while (waveEnemies.Count > 0)
+        {
+            yield return new WaitForSeconds(1f);
+        }
+        
+        CompleteSession();
         isSpawning = false;
-        Debug.Log("Wave routine ended. isSpawning = false");
     }
     
-    private IEnumerator SpawnWave()
+    private IEnumerator SpawnWave(int waveNumber)
     {
-        isSpawning = true;
-        currentWave++;
+        int enemiesToSpawn = Mathf.RoundToInt(initialEnemiesPerWave + (waveNumber - 1) * enemiesIncreasePerWave);
         
-        int enemiesToSpawn = Mathf.RoundToInt(initialEnemiesPerWave + (currentWave - 1) * enemiesIncreasePerWave);
+        waveEnemies[waveNumber] = new List<GameObject>();
+        waveEnemyCounts[waveNumber] = enemiesToSpawn;
         
-        if (enemiesAlive > 0)
-        {
-            Debug.Log($"<color=orange>Starting Wave {currentWave} with {enemiesToSpawn} enemies! ({enemiesAlive} enemies from previous waves still alive)</color>");
-        }
-        else
-        {
-            Debug.Log($"Starting Wave {currentWave} with {enemiesToSpawn} enemies!");
-        }
+        int activeWaves = waveEnemies.Count - completedWaves.Count;
+        Debug.Log($"<color=orange>▶ WAVE {waveNumber} SPAWNING: {enemiesToSpawn} enemies | Active waves: {activeWaves}</color>");
         
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            SpawnEnemy();
+            SpawnEnemy(waveNumber);
             yield return new WaitForSeconds(0.5f);
         }
         
-        isSpawning = false;
+        Debug.Log($"<color=yellow>Wave {waveNumber} fully spawned ({enemiesToSpawn} enemies)</color>");
     }
     
-    private void SpawnEnemy()
+    private void SpawnEnemy(int waveNumber)
     {
         if (enemyPrefab == null || playerTransform == null)
         {
@@ -163,8 +196,15 @@ public class WaveSpawner : MonoBehaviour
         }
         
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        activeEnemies.Add(enemy);
-        enemiesAlive++;
+        
+        WaveEnemy waveEnemy = enemy.GetComponent<WaveEnemy>();
+        if (waveEnemy == null)
+        {
+            waveEnemy = enemy.AddComponent<WaveEnemy>();
+        }
+        waveEnemy.SetWaveNumber(waveNumber);
+        
+        waveEnemies[waveNumber].Add(enemy);
         
         if (activeDefenseZone != null)
         {
@@ -230,9 +270,13 @@ public class WaveSpawner : MonoBehaviour
         if (!isSpawning && !sessionComplete)
         {
             sessionComplete = false;
-            wavesCompletedThisSession = 0;
+            currentWaveNumber = 0;
+            wavesSpawned = 0;
+            waveEnemies.Clear();
+            waveEnemyCounts.Clear();
+            completedWaves.Clear();
             StartCoroutine(WaveRoutine());
-            Debug.Log("StartWaves() called - beginning new wave session");
+            Debug.Log("StartWaves() called - beginning new overlapping wave session");
         }
         else if (sessionComplete)
         {
@@ -247,25 +291,44 @@ public class WaveSpawner : MonoBehaviour
     private void CompleteSession()
     {
         sessionComplete = true;
-        Debug.Log($"Wave session complete! Completed {wavesCompletedThisSession} waves. Total waves: {currentWave}. Return to base!");
+        Debug.Log($"<color=cyan>=== WAVE SESSION COMPLETE ===</color>");
+        Debug.Log($"All {wavesSpawned} waves cleared! Total waves spawned: {currentWaveNumber}");
         
         if (GameProgressionManager.Instance != null)
         {
             GameProgressionManager.Instance.OnWaveSessionComplete();
         }
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.CompleteSession();
+        }
+    }
+    
+    private void OnIndividualWaveCleared()
+    {
+        if (GameProgressionManager.Instance != null && CurrencyManager.Instance != null)
+        {
+            GameProgressionManager.Instance.OnIndividualWaveComplete();
+        }
     }
     
     public void ResetSession()
     {
-        wavesCompletedThisSession = 0;
         sessionComplete = false;
-        Debug.Log($"Session reset. Ready for next wave session. Current wave: {currentWave}");
+        currentWaveNumber = 0;
+        wavesSpawned = 0;
+        waveEnemies.Clear();
+        waveEnemyCounts.Clear();
+        completedWaves.Clear();
+        Debug.Log($"Session reset. Ready for next wave session.");
     }
     
-    public int CurrentWave => currentWave;
-    public int WavesCompletedThisSession => wavesCompletedThisSession;
+    public int CurrentWave => currentWaveNumber;
+    public int WavesCompletedThisSession => completedWaves.Count;
     public bool IsSessionComplete => sessionComplete;
-    public int EnemiesAlive => enemiesAlive;
+    public int EnemiesAlive => waveEnemies.Values.Sum(list => list.Count(enemy => enemy != null));
+    public int ActiveWaves => waveEnemies.Count - completedWaves.Count;
     
     private void OnDrawGizmosSelected()
     {

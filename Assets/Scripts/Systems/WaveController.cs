@@ -46,13 +46,9 @@ public class WaveController : MonoBehaviour
         
         currentZone = GetActiveZone();
         
-        if (GameProgressionManager.Instance != null && waitForBaseExit)
+        if (RunStateManager.Instance != null)
         {
-            GameProgressionManager.Instance.OnExitedBase.AddListener(StartNextWave);
-        }
-        else
-        {
-            StartNextWave();
+            RunStateManager.Instance.OnSessionStarted.AddListener(StartNextWave);
         }
     }
     

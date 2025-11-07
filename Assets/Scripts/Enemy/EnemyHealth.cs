@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private int goldReward = 5;
     [SerializeField] private int xpReward = 10;
     [SerializeField] private GameObject xpOrbPrefab;
+    [SerializeField] private float xpOrbSpawnDelay = 0.8f;
     
     private float currentHealth;
     private EnemyAI enemyAI;
@@ -41,18 +43,9 @@ public class EnemyHealth : MonoBehaviour
             CurrencyManager.Instance.AddGold(goldReward);
         }
         
-        if (xpOrbPrefab != null)
+        if (xpOrbPrefab != null && CurrencyManager.Instance != null)
         {
-            GameObject orb = Instantiate(xpOrbPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
-            ExperienceOrb orbScript = orb.GetComponent<ExperienceOrb>();
-            if (orbScript != null)
-            {
-                orbScript.Initialize(xpReward);
-            }
-            else
-            {
-                Debug.LogWarning("ExperienceOrb component not found on XP Orb prefab!");
-            }
+            CurrencyManager.Instance.StartCoroutine(SpawnXPOrbDelayed(transform.position, xpReward));
         }
         
         if (SaveSystem.Instance != null)
@@ -67,6 +60,24 @@ public class EnemyHealth : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+    
+    private IEnumerator SpawnXPOrbDelayed(Vector3 enemyPosition, int xp)
+    {
+        Vector3 spawnPosition = enemyPosition + Vector3.up * 0.5f;
+        
+        yield return new WaitForSeconds(xpOrbSpawnDelay);
+        
+        GameObject orb = Instantiate(xpOrbPrefab, spawnPosition, Quaternion.identity);
+        ExperienceOrb orbScript = orb.GetComponent<ExperienceOrb>();
+        if (orbScript != null)
+        {
+            orbScript.Initialize(xp);
+        }
+        else
+        {
+            Debug.LogWarning("ExperienceOrb component not found on XP Orb prefab!");
         }
     }
     

@@ -7,11 +7,13 @@ public class CurrencyDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private TextMeshProUGUI experienceText;
     [SerializeField] private TextMeshProUGUI essenceText;
+    [SerializeField] private TextMeshProUGUI essenceEarnedThisRunText;
     
     [Header("Display Settings")]
     [SerializeField] private bool showGold = true;
     [SerializeField] private bool showExperience = true;
     [SerializeField] private bool showEssence = false;
+    [SerializeField] private bool showEssenceEarnedThisRun = true;
     
     private void Start()
     {
@@ -20,10 +22,12 @@ public class CurrencyDisplay : MonoBehaviour
             CurrencyManager.Instance.OnGoldChanged.AddListener(UpdateGoldDisplay);
             CurrencyManager.Instance.OnExperienceChanged.AddListener(UpdateExperienceDisplay);
             CurrencyManager.Instance.OnEssenceChanged.AddListener(UpdateEssenceDisplay);
+            CurrencyManager.Instance.OnEssenceEarnedThisRunChanged.AddListener(UpdateEssenceEarnedThisRunDisplay);
             
             UpdateGoldDisplay(CurrencyManager.Instance.Gold);
             UpdateExperienceDisplay(CurrencyManager.Instance.Experience);
             UpdateEssenceDisplay(CurrencyManager.Instance.Essence);
+            UpdateEssenceEarnedThisRunDisplay(CurrencyManager.Instance.EssenceEarnedThisRun);
         }
     }
     
@@ -58,6 +62,14 @@ public class CurrencyDisplay : MonoBehaviour
         }
     }
     
+    private void UpdateEssenceEarnedThisRunDisplay(int essenceEarned)
+    {
+        if (showEssenceEarnedThisRun && essenceEarnedThisRunText != null)
+        {
+            essenceEarnedThisRunText.text = $"Essence: {essenceEarned}";
+        }
+    }
+    
     private void OnDestroy()
     {
         if (CurrencyManager.Instance != null)
@@ -65,6 +77,7 @@ public class CurrencyDisplay : MonoBehaviour
             CurrencyManager.Instance.OnGoldChanged.RemoveListener(UpdateGoldDisplay);
             CurrencyManager.Instance.OnExperienceChanged.RemoveListener(UpdateExperienceDisplay);
             CurrencyManager.Instance.OnEssenceChanged.RemoveListener(UpdateEssenceDisplay);
+            CurrencyManager.Instance.OnEssenceEarnedThisRunChanged.RemoveListener(UpdateEssenceEarnedThisRunDisplay);
         }
     }
 }

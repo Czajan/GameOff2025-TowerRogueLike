@@ -163,6 +163,7 @@ MonoBehaviour:
   goldReward: 5
   xpReward: 10
   xpOrbPrefab: {fileID: 1487144484790752095, guid: 8685f745f31365047a5e61ea17e1891c, type: 3}
+  xpOrbSpawnDelay: 0.8
 --- !u!114 &308446052215662755
 MonoBehaviour:
   m_ObjectHideFlags: 0
