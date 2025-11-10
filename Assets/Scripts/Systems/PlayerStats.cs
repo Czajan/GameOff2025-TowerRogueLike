@@ -61,6 +61,37 @@ public class PlayerStats : MonoBehaviour
     {
         LoadUpgradeLevelsFromSave();
         ApplyStatsToPlayer();
+        
+        if (ExperienceSystem.Instance != null)
+        {
+            ExperienceSystem.Instance.OnLevelUp.AddListener(OnPlayerLevelUp);
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        if (ExperienceSystem.Instance != null)
+        {
+            ExperienceSystem.Instance.OnLevelUp.RemoveListener(OnPlayerLevelUp);
+        }
+    }
+    
+    private void OnPlayerLevelUp(int newLevel)
+    {
+        ApplyLevelUpBonuses(newLevel);
+    }
+    
+    private void ApplyLevelUpBonuses(int level)
+    {
+        float damageBonus = 2f;
+        float healthBonus = 10f;
+        float critChanceBonus = 0.01f;
+        
+        AddTemporaryDamage(damageBonus);
+        AddTemporaryMaxHealth(healthBonus);
+        AddTemporaryCritChance(critChanceBonus);
+        
+        Debug.Log($"<color=yellow>★ Level {level} Bonuses Applied! +{damageBonus} damage, +{healthBonus} HP, +{critChanceBonus * 100}% crit chance</color>");
     }
     
     private void LoadUpgradeLevelsFromSave()
