@@ -78,7 +78,24 @@ public class PlayerStats : MonoBehaviour
     
     private void OnPlayerLevelUp(int newLevel)
     {
-        Debug.Log($"<color=yellow>★ LEVEL UP to {newLevel}!</color>");
+        if (newLevel % 5 == 0)
+        {
+            Debug.Log($"<color=yellow>★ MILESTONE LEVEL {newLevel}! Awaiting player upgrade choice...</color>");
+        }
+        else
+        {
+            ApplyAutomaticLevelUpBonuses(newLevel);
+        }
+    }
+    
+    private void ApplyAutomaticLevelUpBonuses(int level)
+    {
+        AddTemporaryDamage(2f);
+        AddTemporaryMaxHealth(10f);
+        AddTemporaryMoveSpeed(0.02f);
+        
+        Debug.Log($"<color=cyan>★ LEVEL {level} - Auto bonuses applied: +2 Damage, +10 HP, +2% Speed</color>");
+        OnStatsChanged?.Invoke();
     }
     
     private void LoadUpgradeLevelsFromSave()

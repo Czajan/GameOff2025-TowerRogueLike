@@ -18,7 +18,7 @@ public class UpgradeOptionUI : MonoBehaviour
     [SerializeField] private Color rareColor = new Color(0.29f, 0.56f, 0.89f);
     [SerializeField] private Color legendaryColor = new Color(1f, 0.84f, 0f);
     
-    private UpgradeData upgradeData;
+    private LevelUpgradeData upgradeData;
     private int optionIndex;
     private UpgradeSelectionUI parentUI;
     
@@ -30,7 +30,7 @@ public class UpgradeOptionUI : MonoBehaviour
         }
     }
     
-    public void SetUpgrade(UpgradeData upgrade, int index, UpgradeSelectionUI parent)
+    public void SetUpgrade(LevelUpgradeData upgrade, int index, UpgradeSelectionUI parent)
     {
         upgradeData = upgrade;
         optionIndex = index;
@@ -119,13 +119,13 @@ public class UpgradeOptionUI : MonoBehaviour
         return desc;
     }
     
-    private Color GetRarityColor(UpgradeRarity rarity)
+    private Color GetRarityColor(LevelUpgradeRarity rarity)
     {
         switch (rarity)
         {
-            case UpgradeRarity.Common: return commonColor;
-            case UpgradeRarity.Rare: return rareColor;
-            case UpgradeRarity.Legendary: return legendaryColor;
+            case LevelUpgradeRarity.Common: return commonColor;
+            case LevelUpgradeRarity.Rare: return rareColor;
+            case LevelUpgradeRarity.Legendary: return legendaryColor;
             default: return Color.white;
         }
     }

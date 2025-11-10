@@ -8,7 +8,7 @@ public class UpgradeSystem : MonoBehaviour
     public static UpgradeSystem Instance { get; private set; }
     
     [Header("Upgrade Pool")]
-    [SerializeField] private List<UpgradeData> allUpgrades = new List<UpgradeData>();
+    [SerializeField] private List<LevelUpgradeData> allUpgrades = new List<LevelUpgradeData>();
     
     [Header("Offering Settings")]
     [SerializeField] private int upgradesPerOffer = 3;
@@ -20,10 +20,10 @@ public class UpgradeSystem : MonoBehaviour
     [SerializeField] private float legendaryWeight = 5f;
     
     [Header("Events")]
-    public UnityEvent<List<UpgradeData>> OnUpgradesOffered = new UnityEvent<List<UpgradeData>>();
-    public UnityEvent<UpgradeData> OnUpgradeSelected = new UnityEvent<UpgradeData>();
+    public UnityEvent<List<LevelUpgradeData>> OnUpgradesOffered = new UnityEvent<List<LevelUpgradeData>>();
+    public UnityEvent<LevelUpgradeData> OnUpgradeSelected = new UnityEvent<LevelUpgradeData>();
     
-    private Dictionary<UpgradeData, int> acquiredUpgrades = new Dictionary<UpgradeData, int>();
+    private Dictionary<LevelUpgradeData, int> acquiredUpgrades = new Dictionary<LevelUpgradeData, int>();
     
     private void Awake()
     {
@@ -47,7 +47,7 @@ public class UpgradeSystem : MonoBehaviour
         
         if (RunStateManager.Instance != null)
         {
-            RunStateManager.Instance.OnRunStarted += ResetUpgrades;
+            RunStateManager.Instance.OnRunStarted.AddListener(ResetUpgrades);
         }
     }
     
@@ -60,7 +60,7 @@ public class UpgradeSystem : MonoBehaviour
         
         if (RunStateManager.Instance != null)
         {
-            RunStateManager.Instance.OnRunStarted -= ResetUpgrades;
+            RunStateManager.Instance.OnRunStarted.RemoveListener(ResetUpgrades);
         }
     }
     
@@ -79,7 +79,7 @@ public class UpgradeSystem : MonoBehaviour
     
     public void OfferUpgradeChoices()
     {
-        List<UpgradeData> offeredUpgrades = SelectRandomUpgrades(upgradesPerOffer);
+        List<LevelUpgradeData> offeredUpgrades = SelectRandomUpgrades(upgradesPerOffer);
         
         if (offeredUpgrades.Count > 0)
         {
@@ -88,10 +88,10 @@ public class UpgradeSystem : MonoBehaviour
         }
     }
     
-    private List<UpgradeData> SelectRandomUpgrades(int count)
+    private List<LevelUpgradeData> SelectRandomUpgrades(int count)
     {
-        List<UpgradeData> availableUpgrades = GetAvailableUpgrades();
-        List<UpgradeData> selected = new List<UpgradeData>();
+        List<LevelUpgradeData> availableUpgrades = GetAvailableUpgrades();
+        List<LevelUpgradeData> selected = new List<LevelUpgradeData>();
         
         if (availableUpgrades.Count == 0)
         {
@@ -101,7 +101,7 @@ public class UpgradeSystem : MonoBehaviour
         
         for (int i = 0; i < count && availableUpgrades.Count > 0; i++)
         {
-            UpgradeData upgrade = SelectWeightedRandomUpgrade(availableUpgrades);
+            LevelUpgradeData upgrade = SelectWeightedRandomUpgrade(availableUpgrades);
             selected.Add(upgrade);
             
             if (!allowDuplicates)
@@ -113,16 +113,16 @@ public class UpgradeSystem : MonoBehaviour
         return selected;
     }
     
-    private List<UpgradeData> GetAvailableUpgrades()
+    private List<LevelUpgradeData> GetAvailableUpgrades()
     {
         if (allowDuplicates)
         {
-            return new List<UpgradeData>(allUpgrades);
+            return new List<LevelUpgradeData>(allUpgrades);
         }
         
-        List<UpgradeData> available = new List<UpgradeData>();
+        List<LevelUpgradeData> available = new List<LevelUpgradeData>();
         
-        foreach (UpgradeData upgrade in allUpgrades)
+        foreach (LevelUpgradeData upgrade in allUpgrades)
         {
             int currentStacks = GetUpgradeStacks(upgrade);
             
@@ -139,17 +139,17 @@ public class UpgradeSystem : MonoBehaviour
         return available;
     }
     
-    private UpgradeData SelectWeightedRandomUpgrade(List<UpgradeData> upgrades)
+    private LevelUpgradeData SelectWeightedRandomUpgrade(List<LevelUpgradeData> upgrades)
     {
-        Dictionary<UpgradeRarity, float> rarityWeights = new Dictionary<UpgradeRarity, float>
+        Dictionary<LevelUpgradeRarity, float> rarityWeights = new Dictionary<LevelUpgradeRarity, float>
         {
-            { UpgradeRarity.Common, commonWeight },
-            { UpgradeRarity.Rare, rareWeight },
-            { UpgradeRarity.Legendary, legendaryWeight }
+            { LevelUpgradeRarity.Common, commonWeight },
+            { LevelUpgradeRarity.Rare, rareWeight },
+            { LevelUpgradeRarity.Legendary, legendaryWeight }
         };
         
         float totalWeight = 0f;
-        foreach (UpgradeData upgrade in upgrades)
+        foreach (LevelUpgradeData upgrade in upgrades)
         {
             totalWeight += rarityWeights[upgrade.rarity];
         }
@@ -157,7 +157,7 @@ public class UpgradeSystem : MonoBehaviour
         float randomValue = Random.value * totalWeight;
         float cumulativeWeight = 0f;
         
-        foreach (UpgradeData upgrade in upgrades)
+        foreach (LevelUpgradeData upgrade in upgrades)
         {
             cumulativeWeight += rarityWeights[upgrade.rarity];
             if (randomValue <= cumulativeWeight)
@@ -169,7 +169,7 @@ public class UpgradeSystem : MonoBehaviour
         return upgrades[upgrades.Count - 1];
     }
     
-    public void SelectUpgrade(UpgradeData upgrade)
+    public void SelectUpgrade(LevelUpgradeData upgrade)
     {
         if (upgrade == null)
         {
@@ -193,7 +193,7 @@ public class UpgradeSystem : MonoBehaviour
         Debug.Log($"<color=yellow>★ Selected: {upgrade.upgradeName} (Stack {stacks})</color>");
     }
     
-    private void ApplyUpgrade(UpgradeData upgrade)
+    private void ApplyUpgrade(LevelUpgradeData upgrade)
     {
         if (PlayerStats.Instance != null)
         {
@@ -235,12 +235,12 @@ public class UpgradeSystem : MonoBehaviour
         }
     }
     
-    public int GetUpgradeStacks(UpgradeData upgrade)
+    public int GetUpgradeStacks(LevelUpgradeData upgrade)
     {
         return acquiredUpgrades.ContainsKey(upgrade) ? acquiredUpgrades[upgrade] : 0;
     }
     
-    public bool HasUpgrade(UpgradeData upgrade)
+    public bool HasUpgrade(LevelUpgradeData upgrade)
     {
         return acquiredUpgrades.ContainsKey(upgrade);
     }
@@ -251,8 +251,8 @@ public class UpgradeSystem : MonoBehaviour
         Debug.Log("Upgrades reset for new run.");
     }
     
-    public Dictionary<UpgradeData, int> GetAcquiredUpgrades()
+    public Dictionary<LevelUpgradeData, int> GetAcquiredUpgrades()
     {
-        return new Dictionary<UpgradeData, int>(acquiredUpgrades);
+        return new Dictionary<LevelUpgradeData, int>(acquiredUpgrades);
     }
 }

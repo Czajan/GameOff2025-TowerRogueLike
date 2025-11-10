@@ -13,7 +13,7 @@ public class UpgradeSelectionUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private bool pauseGameOnShow = true;
     
-    private List<UpgradeData> currentOfferedUpgrades;
+    private List<LevelUpgradeData> currentOfferedUpgrades;
     
     private void Start()
     {
@@ -38,7 +38,7 @@ public class UpgradeSelectionUI : MonoBehaviour
         }
     }
     
-    private void ShowUpgradeChoices(List<UpgradeData> upgrades)
+    private void ShowUpgradeChoices(List<LevelUpgradeData> upgrades)
     {
         currentOfferedUpgrades = upgrades;
         
@@ -82,7 +82,7 @@ public class UpgradeSelectionUI : MonoBehaviour
             return;
         }
         
-        UpgradeData selectedUpgrade = currentOfferedUpgrades[optionIndex];
+        LevelUpgradeData selectedUpgrade = currentOfferedUpgrades[optionIndex];
         
         if (UpgradeSystem.Instance != null)
         {
@@ -90,7 +90,7 @@ public class UpgradeSelectionUI : MonoBehaviour
         }
     }
     
-    private void OnUpgradeSelected(UpgradeData upgrade)
+    private void OnUpgradeSelected(LevelUpgradeData upgrade)
     {
         HideUI();
     }

@@ -1,28 +1,28 @@
 using UnityEngine;
 
-public enum UpgradeRarity
+public enum LevelUpgradeRarity
 {
     Common,
     Rare,
     Legendary
 }
 
-public enum UpgradeType
+public enum LevelUpgradeType
 {
     StatBoost,
     Functionality
 }
 
-[CreateAssetMenu(fileName = "New Upgrade", menuName = "Game/Upgrade")]
-public class UpgradeData : ScriptableObject
+[CreateAssetMenu(fileName = "New Level Upgrade", menuName = "Game/Level Upgrade")]
+public class LevelUpgradeData : ScriptableObject
 {
     [Header("Basic Info")]
     public string upgradeName = "New Upgrade";
     [TextArea(3, 5)]
     public string description = "Upgrade description";
     public Sprite icon;
-    public UpgradeRarity rarity = UpgradeRarity.Common;
-    public UpgradeType upgradeType = UpgradeType.StatBoost;
+    public LevelUpgradeRarity rarity = LevelUpgradeRarity.Common;
+    public LevelUpgradeType upgradeType = LevelUpgradeType.StatBoost;
     
     [Header("Stack Settings")]
     public bool canStack = true;
@@ -52,9 +52,9 @@ public class UpgradeData : ScriptableObject
     {
         switch (rarity)
         {
-            case UpgradeRarity.Common: return "#CCCCCC";
-            case UpgradeRarity.Rare: return "#4A90E2";
-            case UpgradeRarity.Legendary: return "#FFD700";
+            case LevelUpgradeRarity.Common: return "#CCCCCC";
+            case LevelUpgradeRarity.Rare: return "#4A90E2";
+            case LevelUpgradeRarity.Legendary: return "#FFD700";
             default: return "#FFFFFF";
         }
     }

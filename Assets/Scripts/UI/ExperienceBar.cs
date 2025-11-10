@@ -105,7 +105,8 @@ public class ExperienceBar : MonoBehaviour
     {
         if (fillImage == null || ExperienceSystem.Instance == null) return;
         
-        if (ExperienceSystem.Instance.CurrentLevel % 5 == 0)
+        int nextLevel = ExperienceSystem.Instance.CurrentLevel + 1;
+        if (nextLevel % 5 == 0)
         {
             fillImage.color = milestoneColor;
         }
