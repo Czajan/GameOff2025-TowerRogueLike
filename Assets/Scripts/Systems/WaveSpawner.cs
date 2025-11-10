@@ -79,6 +79,11 @@ public class WaveSpawner : MonoBehaviour
             }
         }
         
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunEnded.AddListener(OnRunEnded);
+        }
+        
         if (autoStartWaves)
         {
             StartCoroutine(WaveRoutine());
@@ -297,6 +302,37 @@ public class WaveSpawner : MonoBehaviour
         if (RunStateManager.Instance != null)
         {
             RunStateManager.Instance.CompleteSession();
+        }
+    }
+    
+    private void OnRunEnded()
+    {
+        StopAllCoroutines();
+        isSpawning = false;
+        sessionComplete = false;
+        currentWaveNumber = 0;
+        wavesSpawned = 0;
+        waveEnemies.Clear();
+        waveEnemyCounts.Clear();
+        completedWaves.Clear();
+        
+        EnemyHealth[] allEnemies = FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
+        foreach (EnemyHealth enemy in allEnemies)
+        {
+            if (enemy != null && enemy.gameObject != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+        }
+        
+        Debug.Log("<color=cyan>WaveSpawner: Run ended, all enemies cleared and state reset</color>");
+    }
+    
+    private void OnDestroy()
+    {
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunEnded.RemoveListener(OnRunEnded);
         }
     }
     

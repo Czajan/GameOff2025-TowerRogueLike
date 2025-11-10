@@ -15,6 +15,9 @@ public class RunStateManager : MonoBehaviour
     [Header("State Configuration")]
     [SerializeField] private float betweenSessionsDuration = 60f;
     
+    [Header("Player Teleport")]
+    [SerializeField] private Transform baseSpawnPoint;
+    
     [Header("Current State")]
     [SerializeField] private RunState currentState = RunState.PreRunMenu;
     [SerializeField] private int currentSessionNumber = 0;
@@ -44,6 +47,16 @@ public class RunStateManager : MonoBehaviour
     
     private void Start()
     {
+        if (baseSpawnPoint == null)
+        {
+            GameObject baseObject = GameObject.Find("Base");
+            if (baseObject != null)
+            {
+                baseSpawnPoint = baseObject.transform;
+                Debug.Log("<color=cyan>RunStateManager: Auto-assigned Base as spawn point</color>");
+            }
+        }
+        
         SetState(RunState.PreRunMenu);
     }
     
@@ -134,6 +147,8 @@ public class RunStateManager : MonoBehaviour
         runActive = false;
         SetState(RunState.PreRunMenu);
         
+        TeleportPlayerToBase();
+        
         OnRunEnded?.Invoke();
         
         if (GameProgressionManager.Instance != null)
@@ -142,6 +157,39 @@ public class RunStateManager : MonoBehaviour
         }
         
         Debug.Log($"<color=cyan>=== RUN ENDED ({(victory ? "VICTORY" : "DEFEAT")}) ===</color>");
+    }
+    
+    private void TeleportPlayerToBase()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null && baseSpawnPoint != null)
+        {
+            CharacterController characterController = player.GetComponent<CharacterController>();
+            
+            if (characterController != null)
+            {
+                characterController.enabled = false;
+                player.transform.position = baseSpawnPoint.position;
+                characterController.enabled = true;
+            }
+            else
+            {
+                player.transform.position = baseSpawnPoint.position;
+            }
+            
+            Debug.Log("<color=green>✓ Player teleported to base spawn point</color>");
+        }
+        else
+        {
+            if (player == null)
+            {
+                Debug.LogWarning("TeleportPlayerToBase: Player not found!");
+            }
+            if (baseSpawnPoint == null)
+            {
+                Debug.LogWarning("TeleportPlayerToBase: Base spawn point not assigned!");
+            }
+        }
     }
     
     private void SetState(RunState newState)

@@ -92,6 +92,15 @@ public class DefenseObjective : MonoBehaviour
         objectiveRenderer.material.color = targetColor;
     }
     
+    public void ResetObjective()
+    {
+        currentHealth = maxHealth;
+        gameObject.SetActive(true);
+        UpdateVisuals();
+        OnHealthChanged?.Invoke(HealthPercentage);
+        Debug.Log($"<color=green>{objectiveName} reset to full health</color>");
+    }
+    
     public float HealthPercentage => currentHealth / maxHealth;
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;

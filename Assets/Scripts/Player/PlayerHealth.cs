@@ -19,10 +19,32 @@ public class PlayerHealth : MonoBehaviour
         visualFeedback = GetComponent<VisualFeedback>();
         statMaxHealth = maxHealth;
         currentHealth = statMaxHealth;
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.AddListener(ResetHealth);
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.RemoveListener(ResetHealth);
+        }
+    }
+    
+    private void ResetHealth()
+    {
+        currentHealth = statMaxHealth;
+        OnHealthChanged?.Invoke(HealthPercentage);
+        Debug.Log("<color=green>Player health reset to full</color>");
     }
     
     public void TakeDamage(float damage)
     {
+        if (currentHealth <= 0) return;
+        
         currentHealth -= damage;
         currentHealth = Mathf.Max(currentHealth, 0);
         
@@ -54,7 +76,12 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         OnDeath?.Invoke();
-        Debug.Log("Player died!");
+        Debug.Log("<color=red>💀 PLAYER DIED! GAME OVER!</color>");
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.EndRun(false);
+        }
     }
     
     public float CurrentHealth => currentHealth;

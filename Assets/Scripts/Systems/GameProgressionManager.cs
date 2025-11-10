@@ -52,8 +52,29 @@ public class GameProgressionManager : MonoBehaviour
     
     private void Start()
     {
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.AddListener(OnRunStarted);
+            RunStateManager.Instance.OnRunEnded.AddListener(OnRunEndedReset);
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.RemoveListener(OnRunStarted);
+            RunStateManager.Instance.OnRunEnded.RemoveListener(OnRunEndedReset);
+        }
+    }
+    
+    private void OnRunStarted()
+    {
         enemiesKilledThisRun = 0;
         wavesCompletedThisRun = 0;
+        currentDefenseZone = 0;
+        isInBase = true;
+        waveSessionActive = false;
         
         if (CurrencyManager.Instance != null)
         {
@@ -69,6 +90,25 @@ public class GameProgressionManager : MonoBehaviour
         {
             ExperienceSystem.Instance.ResetLevel();
         }
+        
+        DefenseZone[] allZones = FindObjectsByType<DefenseZone>(FindObjectsSortMode.None);
+        foreach (DefenseZone zone in allZones)
+        {
+            zone.ResetZone();
+        }
+        
+        Debug.Log("<color=green>GameProgressionManager: Run started, all systems reset</color>");
+    }
+    
+    private void OnRunEndedReset()
+    {
+        enemiesKilledThisRun = 0;
+        wavesCompletedThisRun = 0;
+        currentDefenseZone = 0;
+        isInBase = true;
+        waveSessionActive = false;
+        
+        Debug.Log("<color=cyan>GameProgressionManager: Run ended, state reset</color>");
     }
     
     private void Update()
@@ -153,13 +193,7 @@ public class GameProgressionManager : MonoBehaviour
     {
         wavesCompletedThisRun++;
         
-        Debug.Log($"=== WAVE SESSION COMPLETE! {wavesCompletedThisRun} waves completed this run. Return to base for upgrades! ===");
-        
-        NotificationUI notification = FindFirstObjectByType<NotificationUI>();
-        if (notification != null)
-        {
-            notification.ShowNotification($"Wave Session Complete! Return to base for upgrades!");
-        }
+        Debug.Log($"<color=cyan>=== WAVE SESSION COMPLETE! {wavesCompletedThisRun} waves completed this run. Return to base for upgrades! ===</color>");
     }
     
     public void OnIndividualWaveComplete()

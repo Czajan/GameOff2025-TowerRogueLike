@@ -70,28 +70,15 @@ public class DefenseZone : MonoBehaviour
         isActive = false;
         OnZoneLost?.Invoke();
         
-        Debug.Log($"<color=red>⚠️ ZONE {zoneIndex + 1} LOST! Falling back...</color>");
-        
-        NotificationUI notification = FindFirstObjectByType<NotificationUI>();
-        if (notification != null)
-        {
-            if (nextZone != null)
-            {
-                notification.ShowNotification($"ZONE {zoneIndex + 1} OBJECTIVE DESTROYED! Retreat to Zone {nextZone.ZoneIndex + 1}!");
-            }
-            else
-            {
-                notification.ShowNotification("FINAL OBJECTIVE DESTROYED! GAME OVER!");
-            }
-        }
-        
-        if (GameProgressionManager.Instance != null)
-        {
-            GameProgressionManager.Instance.FallbackToNextZone();
-        }
-        
         if (nextZone != null)
         {
+            Debug.Log($"<color=red>⚠️ ZONE {zoneIndex + 1} OBJECTIVE DESTROYED! Retreat to Zone {nextZone.ZoneIndex + 1}!</color>");
+            
+            if (GameProgressionManager.Instance != null)
+            {
+                GameProgressionManager.Instance.FallbackToNextZone();
+            }
+            
             nextZone.ActivateZone();
             RetargetEnemies(nextZone);
             
@@ -102,7 +89,17 @@ public class DefenseZone : MonoBehaviour
         }
         else
         {
-            Debug.Log("<color=red>⚠️ NO MORE ZONES! GAME OVER!</color>");
+            Debug.Log($"<color=red>⚠️ FINAL OBJECTIVE DESTROYED! GAME OVER!</color>");
+            
+            if (RunStateManager.Instance != null)
+            {
+                RunStateManager.Instance.EndRun(false);
+            }
+            
+            if (GameProgressionManager.Instance != null)
+            {
+                GameProgressionManager.Instance.FallbackToNextZone();
+            }
         }
     }
     
@@ -147,6 +144,32 @@ public class DefenseZone : MonoBehaviour
     public Vector3 GetCenterPosition()
     {
         return transform.position;
+    }
+    
+    public void ResetZone()
+    {
+        hasBeenDestroyed = false;
+        
+        if (zoneIndex == 0)
+        {
+            isActive = true;
+            if (defenseObjective != null)
+            {
+                defenseObjective.gameObject.SetActive(true);
+                defenseObjective.ResetObjective();
+            }
+        }
+        else
+        {
+            isActive = false;
+            if (defenseObjective != null)
+            {
+                defenseObjective.gameObject.SetActive(false);
+                defenseObjective.ResetObjective();
+            }
+        }
+        
+        Debug.Log($"<color=cyan>Zone {zoneIndex + 1} reset</color>");
     }
     
     public bool IsActive => isActive;
