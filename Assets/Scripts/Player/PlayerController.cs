@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float gravity = -15f;
     
+    [Header("Special Abilities")]
+    [SerializeField] private float dashDistance = 5f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+    
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
     
@@ -22,6 +27,15 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 velocity;
     private bool isSprinting;
+    
+    private bool doubleJumpUnlocked = false;
+    private bool hasDoubleJumped = false;
+    
+    private bool dashUnlocked = false;
+    private bool isDashing = false;
+    private float dashTimer = 0f;
+    private float dashCooldownTimer = 0f;
+    private Vector3 dashDirection;
     
     private void Awake()
     {
@@ -44,8 +58,20 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        HandleMovement();
-        HandleGravity();
+        if (isDashing)
+        {
+            HandleDash();
+        }
+        else
+        {
+            HandleMovement();
+            HandleGravity();
+        }
+        
+        if (dashCooldownTimer > 0)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+        }
     }
     
     private void HandleMovement()
@@ -82,13 +108,31 @@ public class PlayerController : MonoBehaviour
     
     private void HandleGravity()
     {
-        if (characterController.isGrounded && velocity.y < 0)
+        if (characterController.isGrounded)
         {
-            velocity.y = -2f;
+            if (velocity.y < 0)
+            {
+                velocity.y = -2f;
+            }
+            hasDoubleJumped = false;
         }
         
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
+    }
+    
+    private void HandleDash()
+    {
+        dashTimer += Time.deltaTime;
+        
+        float dashSpeed = dashDistance / dashDuration;
+        characterController.Move(dashDirection * dashSpeed * Time.deltaTime);
+        
+        if (dashTimer >= dashDuration)
+        {
+            isDashing = false;
+            dashTimer = 0f;
+        }
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -98,10 +142,39 @@ public class PlayerController : MonoBehaviour
     
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed && characterController.isGrounded)
+        if (!context.performed) return;
+        
+        if (characterController.isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            hasDoubleJumped = false;
         }
+        else if (doubleJumpUnlocked && !hasDoubleJumped)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            hasDoubleJumped = true;
+            Debug.Log("<color=cyan>Double Jump!</color>");
+        }
+    }
+    
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (!context.performed || !dashUnlocked || isDashing || dashCooldownTimer > 0)
+            return;
+        
+        Vector3 dashDir = GetMovementDirection();
+        
+        if (dashDir.magnitude < 0.1f)
+        {
+            dashDir = transform.forward;
+        }
+        
+        dashDirection = dashDir.normalized;
+        isDashing = true;
+        dashTimer = 0f;
+        dashCooldownTimer = dashCooldown;
+        
+        Debug.Log("<color=cyan>Dash!</color>");
     }
     
     public void OnSprint(InputAction.CallbackContext context)
@@ -114,5 +187,19 @@ public class PlayerController : MonoBehaviour
         statMoveSpeed = speed;
     }
     
+    public void EnableDoubleJump()
+    {
+        doubleJumpUnlocked = true;
+        Debug.Log("<color=green>★ Double Jump Unlocked!</color>");
+    }
+    
+    public void EnableDash()
+    {
+        dashUnlocked = true;
+        Debug.Log("<color=green>★ Dash Unlocked!</color>");
+    }
+    
+    public bool HasDoubleJump => doubleJumpUnlocked;
+    public bool HasDash => dashUnlocked;
     public bool IsMoving => moveInput.magnitude > 0.1f;
 }

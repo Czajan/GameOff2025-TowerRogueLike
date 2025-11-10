@@ -78,20 +78,7 @@ public class PlayerStats : MonoBehaviour
     
     private void OnPlayerLevelUp(int newLevel)
     {
-        ApplyLevelUpBonuses(newLevel);
-    }
-    
-    private void ApplyLevelUpBonuses(int level)
-    {
-        float damageBonus = 2f;
-        float healthBonus = 10f;
-        float critChanceBonus = 0.01f;
-        
-        AddTemporaryDamage(damageBonus);
-        AddTemporaryMaxHealth(healthBonus);
-        AddTemporaryCritChance(critChanceBonus);
-        
-        Debug.Log($"<color=yellow>★ Level {level} Bonuses Applied! +{damageBonus} damage, +{healthBonus} HP, +{critChanceBonus * 100}% crit chance</color>");
+        Debug.Log($"<color=yellow>★ LEVEL UP to {newLevel}!</color>");
     }
     
     private void LoadUpgradeLevelsFromSave()
