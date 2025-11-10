@@ -6,17 +6,28 @@ public class BaseTrigger : MonoBehaviour
     [Header("Detection Settings")]
     [SerializeField] private Vector3 baseDirection = new Vector3(-1, 0, -1);
     
+    [Header("Gate Auto-Close")]
+    [SerializeField] private BaseGate gate;
+    [SerializeField] private float autoCloseDelay = 1f;
+    [SerializeField] private bool enableAutoClose = true;
+    
     private Transform playerTransform;
     private Vector3 lastPlayerPosition;
     private bool playerInTrigger = false;
     private Collider triggerCollider;
     private bool isActive = true;
+    private bool hasAutoClosedGate = false;
     
     private void Awake()
     {
         triggerCollider = GetComponent<Collider>();
         triggerCollider.isTrigger = true;
         baseDirection.Normalize();
+        
+        if (gate == null)
+        {
+            gate = FindFirstObjectByType<BaseGate>();
+        }
     }
     
     private void Start()
@@ -29,6 +40,12 @@ public class BaseTrigger : MonoBehaviour
         if (WaveController.Instance != null)
         {
             WaveController.Instance.OnSessionComplete.AddListener(EnableTrigger);
+        }
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.AddListener(OnRunStarted);
+            RunStateManager.Instance.OnRunEnded.AddListener(OnRunEnded);
         }
     }
     
@@ -43,6 +60,14 @@ public class BaseTrigger : MonoBehaviour
         {
             WaveController.Instance.OnSessionComplete.RemoveListener(EnableTrigger);
         }
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.OnRunStarted.RemoveListener(OnRunStarted);
+            RunStateManager.Instance.OnRunEnded.RemoveListener(OnRunEnded);
+        }
+        
+        CancelInvoke(nameof(CloseGateVisualAfterDelay));
     }
     
     private void DisableTrigger()
@@ -109,5 +134,42 @@ public class BaseTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         playerInTrigger = false;
+        
+        if (enableAutoClose && !hasAutoClosedGate)
+        {
+            if (RunStateManager.Instance != null && !RunStateManager.Instance.IsInPreRunMenu)
+            {
+                if (gate != null && gate.IsOpen)
+                {
+                    hasAutoClosedGate = true;
+                    
+                    gate.EnableBarrierInstantly();
+                    Debug.Log("<color=yellow>Player exited base zone - BARRIER ENABLED INSTANTLY!</color>");
+                    
+                    Invoke(nameof(CloseGateVisualAfterDelay), autoCloseDelay);
+                    Debug.Log("<color=yellow>Gate visual will close in " + autoCloseDelay + "s...</color>");
+                }
+            }
+        }
+    }
+    
+    private void CloseGateVisualAfterDelay()
+    {
+        if (gate != null)
+        {
+            gate.CloseGate();
+            Debug.Log("<color=orange>Gate visual closed (barrier already active)</color>");
+        }
+    }
+    
+    private void OnRunStarted()
+    {
+        hasAutoClosedGate = false;
+    }
+    
+    private void OnRunEnded()
+    {
+        hasAutoClosedGate = false;
+        CancelInvoke(nameof(CloseGateVisualAfterDelay));
     }
 }

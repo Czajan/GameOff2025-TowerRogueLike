@@ -14,6 +14,20 @@ public class SimpleShopUI : MonoBehaviour
     [SerializeField] private Button closeButton;
     
     private ShopNPC currentNPC;
+    private CanvasGroup canvasGroup;
+    private CursorLockMode previousCursorLockState;
+    private bool previousCursorVisibility;
+    private GameObject preRunMenuPanel;
+    private bool wasPreRunMenuActive;
+    
+    private void Awake()
+    {
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+    }
     
     private void Start()
     {
@@ -27,13 +41,38 @@ public class SimpleShopUI : MonoBehaviour
             CurrencyManager.Instance.OnEssenceChanged.AddListener(UpdateCurrencyDisplay);
         }
         
-        gameObject.SetActive(false);
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
     }
     
     public void OpenShop(ShopNPC npc)
     {
         currentNPC = npc;
+        
         gameObject.SetActive(true);
+        
+        if (InteractionNotificationUI.Instance != null)
+        {
+            InteractionNotificationUI.Instance.HideNotification();
+        }
+        
+        if (preRunMenuPanel == null)
+        {
+            preRunMenuPanel = GameObject.Find("PreRunMenuPanel");
+        }
+        
+        if (preRunMenuPanel != null)
+        {
+            wasPreRunMenuActive = preRunMenuPanel.activeSelf;
+            preRunMenuPanel.SetActive(false);
+        }
+        
+        previousCursorLockState = Cursor.lockState;
+        previousCursorVisibility = Cursor.visible;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
         StopAllCoroutines();
         StartCoroutine(OpenShopCoroutine(npc));
     }
@@ -50,14 +89,23 @@ public class SimpleShopUI : MonoBehaviour
         
         yield return null;
         
+        Canvas.ForceUpdateCanvases();
+        
         if (itemListContainer != null)
         {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(itemListContainer as RectTransform);
+            RectTransform containerRect = itemListContainer as RectTransform;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(containerRect);
         }
+        
+        Time.timeScale = 0f;
+        
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
         
         Canvas.ForceUpdateCanvases();
         
-        Time.timeScale = 0f;
+        Debug.Log($"<color=green>Shop opened successfully: {npc.GetNPCName()}</color>");
     }
     
     private void PopulateShop()
@@ -218,6 +266,14 @@ public class SimpleShopUI : MonoBehaviour
             return null;
         }
         
+        itemObj.SetActive(true);
+        
+        RectTransform rectTransform = itemObj.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            rectTransform.localScale = Vector3.one;
+        }
+        
         return itemObj;
     }
     
@@ -268,13 +324,32 @@ public class SimpleShopUI : MonoBehaviour
         }
     }
     
-    private void CloseShop()
+    public void CloseShop()
     {
+        StopAllCoroutines();
+        
+        Time.timeScale = 1f;
+        
+        Cursor.lockState = previousCursorLockState;
+        Cursor.visible = previousCursorVisibility;
+        
+        if (preRunMenuPanel != null && wasPreRunMenuActive)
+        {
+            preRunMenuPanel.SetActive(true);
+        }
+        
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+        
+        gameObject.SetActive(false);
+        
         if (currentNPC != null)
         {
-            currentNPC.CloseShop();
+            currentNPC = null;
         }
-        gameObject.SetActive(false);
+        
+        Debug.Log("<color=yellow>Shop closed</color>");
     }
     
     private void OnDestroy()

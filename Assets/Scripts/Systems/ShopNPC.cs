@@ -174,11 +174,10 @@ public class ShopNPC : MonoBehaviour
     
     public void CloseShop()
     {
-        if (shopUI != null)
+        if (shopUI != null && shopOpen)
         {
-            shopUI.gameObject.SetActive(false);
+            shopUI.CloseShop();
             shopOpen = false;
-            Time.timeScale = 1f;
             Debug.Log($"Closed {npcName}'s shop");
         }
     }

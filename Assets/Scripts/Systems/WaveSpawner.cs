@@ -267,20 +267,15 @@ public class WaveSpawner : MonoBehaviour
     
     public void StartWaves()
     {
-        if (!isSpawning && !sessionComplete)
+        if (!isSpawning)
         {
             sessionComplete = false;
-            currentWaveNumber = 0;
             wavesSpawned = 0;
             waveEnemies.Clear();
             waveEnemyCounts.Clear();
             completedWaves.Clear();
             StartCoroutine(WaveRoutine());
-            Debug.Log("StartWaves() called - beginning new overlapping wave session");
-        }
-        else if (sessionComplete)
-        {
-            Debug.Log("StartWaves() called but session already complete! Ignoring.");
+            Debug.Log($"<color=cyan>StartWaves() called - beginning new overlapping wave session (continuing from wave {currentWaveNumber})</color>");
         }
         else
         {
