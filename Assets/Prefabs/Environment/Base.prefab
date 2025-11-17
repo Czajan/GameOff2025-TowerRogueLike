@@ -196,8 +196,14 @@ MonoBehaviour:
   openHeight: 5
   animationSpeed: 2
   interactionRange: 3
-  interactionKey: 101
-  promptText: {fileID: 7730686409563193654}
+  interactionPrompt: to Start Run
+  useInstantBarrier: 1
+  barrierSize: {x: 6, y: 4, z: 1}
+  barrierOffset: {x: 0, y: 2, z: 0}
+  useAutoPush: 1
+  pushOutDirection: {x: 0, y: 0, z: -1}
+  pushDistance: 5
+  pushDuration: 1.5
 --- !u!1 &2732026807437035039
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,7 +381,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5934f61001f45974080e28c9b7c7d56d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseTrigger
-  baseDirection: {x: -1, y: 0, z: -1}
+  gate: {fileID: 0}
+  autoCloseDelay: 1
+  enableAutoClose: 1
 --- !u!1 &4664302602137899778
 GameObject:
   m_ObjectHideFlags: 0
