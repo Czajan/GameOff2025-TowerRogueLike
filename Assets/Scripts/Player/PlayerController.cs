@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
     
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    
     private CharacterController characterController;
     private Vector2 moveInput;
     private Vector3 velocity;
@@ -43,6 +46,11 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         statMoveSpeed = moveSpeed;
         
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+        
         if (cameraTransform == null)
         {
             Camera mainCam = Camera.main;
@@ -62,6 +70,7 @@ public class PlayerController : MonoBehaviour
         if (!movementEnabled)
         {
             HandleGravity();
+            UpdateAnimator();
             return;
         }
         
@@ -74,6 +83,8 @@ public class PlayerController : MonoBehaviour
             HandleMovement();
             HandleGravity();
         }
+        
+        UpdateAnimator();
         
         if (dashCooldownTimer > 0)
         {
@@ -155,11 +166,22 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             hasDoubleJumped = false;
+            
+            if (animator != null)
+            {
+                animator.SetTrigger("Jump");
+            }
         }
         else if (doubleJumpUnlocked && !hasDoubleJumped)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             hasDoubleJumped = true;
+            
+            if (animator != null)
+            {
+                animator.SetTrigger("Jump");
+            }
+            
             Debug.Log("<color=cyan>Double Jump!</color>");
         }
     }
@@ -214,6 +236,20 @@ public class PlayerController : MonoBehaviour
             moveInput = Vector2.zero;
         }
         Debug.Log($"<color=cyan>Player movement {(enabled ? "ENABLED" : "DISABLED")}</color>");
+    }
+    
+    private void UpdateAnimator()
+    {
+        if (animator == null) return;
+        
+        float speedValue = moveInput.magnitude;
+        if (isSprinting && speedValue > 0.1f)
+        {
+            speedValue = speedValue * sprintMultiplier;
+        }
+        
+        animator.SetFloat("Speed", speedValue);
+        animator.SetBool("IsGrounded", characterController.isGrounded);
     }
     
     public bool HasDoubleJump => doubleJumpUnlocked;

@@ -89,7 +89,11 @@ public class DefenseObjective : MonoBehaviour
             targetColor = criticalColor;
         }
         
-        objectiveRenderer.material.color = targetColor;
+        Material materialInstance = objectiveRenderer.material;
+        if (materialInstance != null)
+        {
+            materialInstance.color = targetColor;
+        }
     }
     
     public void ResetObjective()

@@ -11,6 +11,7 @@ public class PlayerCombat : MonoBehaviour
     
     [Header("References")]
     [SerializeField] private Transform attackPoint;
+    [SerializeField] private Animator animator;
     
     [Header("Aiming")]
     [SerializeField] private Camera mainCamera;
@@ -27,6 +28,11 @@ public class PlayerCombat : MonoBehaviour
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
+        }
+        
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
         }
         
         playerController = GetComponent<PlayerController>();
@@ -80,6 +86,11 @@ public class PlayerCombat : MonoBehaviour
     {
         if (context.performed && attackTimer <= 0)
         {
+            if (animator != null)
+            {
+                animator.SetTrigger("Attack");
+            }
+            
             PerformAttack();
             
             float finalCooldown = attackCooldown;
