@@ -13,13 +13,8 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private Transform optionsContainer;
     [SerializeField] private GameObject optionButtonPrefab;
     
-    [Header("Stat Upgrade Options - Small Boosts")]
-    [SerializeField] private StatUpgradeOption[] smallBoosts;
-    
-    [Header("Stat Upgrade Options - Significant Boosts (Every 5 Levels)")]
-    [SerializeField] private StatUpgradeOption[] milestoneBoosts;
-    
     private List<GameObject> currentOptions = new List<GameObject>();
+    private List<LevelUpgradeData> currentUpgradeChoices = new List<LevelUpgradeData>();
     
     private void Awake()
     {
@@ -35,9 +30,9 @@ public class LevelUpUI : MonoBehaviour
     
     private void Start()
     {
-        if (ExperienceSystem.Instance != null)
+        if (UpgradeSystem.Instance != null)
         {
-            ExperienceSystem.Instance.OnLevelUp.AddListener(ShowLevelUpOptions);
+            UpgradeSystem.Instance.OnUpgradesOffered.AddListener(ShowUpgradeChoices);
         }
         
         if (levelUpPanel != null)
@@ -46,87 +41,138 @@ public class LevelUpUI : MonoBehaviour
         }
     }
     
-    private void ShowLevelUpOptions(int newLevel)
+    private void OnDestroy()
     {
-        if (levelUpPanel == null || optionsContainer == null) return;
-        
-        ClearCurrentOptions();
-        
-        bool isMilestone = newLevel % 5 == 0;
-        
-        if (levelTitleText != null)
+        if (UpgradeSystem.Instance != null)
         {
-            if (isMilestone)
-            {
-                levelTitleText.text = $"★ LEVEL {newLevel} - MILESTONE! ★";
-            }
-            else
-            {
-                levelTitleText.text = $"LEVEL {newLevel}";
-            }
+            UpgradeSystem.Instance.OnUpgradesOffered.RemoveListener(ShowUpgradeChoices);
+        }
+    }
+    
+    public void ShowUpgradeChoices(List<LevelUpgradeData> upgrades)
+    {
+        if (levelUpPanel == null || optionsContainer == null || upgrades == null || upgrades.Count == 0)
+        {
+            Debug.LogWarning("Cannot show upgrade choices - missing references or no upgrades!");
+            return;
         }
         
-        StatUpgradeOption[] availableOptions = isMilestone ? milestoneBoosts : smallBoosts;
+        ClearCurrentOptions();
+        currentUpgradeChoices = upgrades;
         
-        List<StatUpgradeOption> selectedOptions = SelectRandomOptions(availableOptions, 3);
-        
-        foreach (StatUpgradeOption option in selectedOptions)
+        if (ExperienceSystem.Instance != null && levelTitleText != null)
         {
-            CreateOptionButton(option);
+            int currentLevel = ExperienceSystem.Instance.CurrentLevel;
+            levelTitleText.text = $"★ LEVEL {currentLevel} ★\nChoose Your Upgrade";
+        }
+        
+        foreach (LevelUpgradeData upgrade in upgrades)
+        {
+            CreateUpgradeButton(upgrade);
         }
         
         levelUpPanel.SetActive(true);
         Time.timeScale = 0f;
     }
     
-    private List<StatUpgradeOption> SelectRandomOptions(StatUpgradeOption[] options, int count)
+    private void CreateUpgradeButton(LevelUpgradeData upgrade)
     {
-        List<StatUpgradeOption> selected = new List<StatUpgradeOption>();
-        List<StatUpgradeOption> available = new List<StatUpgradeOption>(options);
-        
-        for (int i = 0; i < count && available.Count > 0; i++)
+        if (optionButtonPrefab == null)
         {
-            int randomIndex = Random.Range(0, available.Count);
-            selected.Add(available[randomIndex]);
-            available.RemoveAt(randomIndex);
+            Debug.LogError("Option button prefab is not assigned!");
+            return;
         }
-        
-        return selected;
-    }
-    
-    private void CreateOptionButton(StatUpgradeOption option)
-    {
-        if (optionButtonPrefab == null) return;
         
         GameObject optionObj = Instantiate(optionButtonPrefab, optionsContainer);
         currentOptions.Add(optionObj);
         
         TextMeshProUGUI nameText = optionObj.transform.Find("Name")?.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI descText = optionObj.transform.Find("Description")?.GetComponent<TextMeshProUGUI>();
-        TextMeshProUGUI valueText = optionObj.transform.Find("Value")?.GetComponent<TextMeshProUGUI>();
+        Image backgroundImage = optionObj.GetComponent<Image>();
         Button button = optionObj.GetComponent<Button>();
         
         if (nameText != null)
-            nameText.text = option.upgradeName;
+        {
+            nameText.text = upgrade.GetFormattedName();
+        }
         
         if (descText != null)
-            descText.text = option.description;
+        {
+            descText.text = GetUpgradeDescription(upgrade);
+        }
         
-        if (valueText != null)
-            valueText.text = option.GetValueText();
+        if (backgroundImage != null)
+        {
+            backgroundImage.color = GetRarityBackgroundColor(upgrade.rarity);
+        }
         
         if (button != null)
         {
-            button.onClick.AddListener(() => SelectOption(option));
+            button.onClick.AddListener(() => SelectUpgrade(upgrade));
         }
     }
     
-    private void SelectOption(StatUpgradeOption option)
+    private string GetUpgradeDescription(LevelUpgradeData upgrade)
     {
-        if (PlayerStats.Instance != null)
+        string desc = upgrade.description;
+        
+        List<string> bonuses = new List<string>();
+        
+        if (upgrade.damageBonus != 0)
+            bonuses.Add($"{(upgrade.damageBonus > 0 ? "+" : "")}{upgrade.damageBonus} Damage");
+        
+        if (upgrade.maxHealthBonus != 0)
+            bonuses.Add($"{(upgrade.maxHealthBonus > 0 ? "+" : "")}{upgrade.maxHealthBonus} Health");
+        
+        if (upgrade.moveSpeedBonus != 0)
+            bonuses.Add($"{(upgrade.moveSpeedBonus > 0 ? "+" : "")}{upgrade.moveSpeedBonus * 100}% Speed");
+        
+        if (upgrade.critChanceBonus != 0)
+            bonuses.Add($"{(upgrade.critChanceBonus > 0 ? "+" : "")}{upgrade.critChanceBonus * 100}% Crit Chance");
+        
+        if (upgrade.critDamageBonus != 0)
+            bonuses.Add($"{(upgrade.critDamageBonus > 0 ? "+" : "")}{upgrade.critDamageBonus * 100}% Crit Damage");
+        
+        if (upgrade.attackSpeedBonus != 0)
+            bonuses.Add($"{(upgrade.attackSpeedBonus > 0 ? "+" : "")}{upgrade.attackSpeedBonus * 100}% Attack Speed");
+        
+        if (upgrade.attackRangeBonus != 0)
+            bonuses.Add($"{(upgrade.attackRangeBonus > 0 ? "+" : "")}{upgrade.attackRangeBonus} Range");
+        
+        if (bonuses.Count > 0)
         {
-            option.ApplyUpgrade(PlayerStats.Instance);
-            Debug.Log($"<color=green>Applied upgrade: {option.upgradeName}</color>");
+            desc += "\n\n" + string.Join("\n", bonuses);
+        }
+        
+        if (upgrade.canStack)
+        {
+            int currentStacks = UpgradeSystem.Instance.GetUpgradeStacks(upgrade);
+            desc += $"\n\n[Stacks: {currentStacks}/{upgrade.maxStacks}]";
+        }
+        
+        return desc;
+    }
+    
+    private Color GetRarityBackgroundColor(LevelUpgradeRarity rarity)
+    {
+        switch (rarity)
+        {
+            case LevelUpgradeRarity.Common:
+                return new Color(0.2f, 0.2f, 0.2f, 0.9f);
+            case LevelUpgradeRarity.Rare:
+                return new Color(0.1f, 0.3f, 0.6f, 0.9f);
+            case LevelUpgradeRarity.Legendary:
+                return new Color(0.6f, 0.4f, 0f, 0.9f);
+            default:
+                return new Color(0.2f, 0.2f, 0.2f, 0.9f);
+        }
+    }
+    
+    private void SelectUpgrade(LevelUpgradeData upgrade)
+    {
+        if (UpgradeSystem.Instance != null)
+        {
+            UpgradeSystem.Instance.SelectUpgrade(upgrade);
         }
         
         CloseLevelUpPanel();
@@ -141,6 +187,7 @@ public class LevelUpUI : MonoBehaviour
         
         Time.timeScale = 1f;
         ClearCurrentOptions();
+        currentUpgradeChoices.Clear();
     }
     
     private void ClearCurrentOptions()
