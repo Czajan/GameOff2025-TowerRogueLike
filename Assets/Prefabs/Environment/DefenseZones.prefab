@@ -572,7 +572,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5965516074375188035}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: cba4fd3f14f7fdf4c98a3497b8da837b, type: 3}
 --- !u!23 &3441806951388484445
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -635,7 +635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefenseObjective
   maxHealth: 500
   objectiveName: Zone 3 Defense Point
-  objectiveRenderer: {fileID: 3441806951388484445}
+  objectiveRenderer: {fileID: 23340323382242846, guid: 256ad2e22fbe2c640a0a7b8fff4519d8, type: 3}
   healthyColor: {r: 0, g: 1, b: 0, a: 1}
   damagedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   criticalColor: {r: 1, g: 0, b: 0, a: 1}
