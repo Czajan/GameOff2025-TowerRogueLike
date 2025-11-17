@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 velocity;
     private bool isSprinting;
+    private bool movementEnabled = true;
     
     private bool doubleJumpUnlocked = false;
     private bool hasDoubleJumped = false;
@@ -58,6 +59,12 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
+        if (!movementEnabled)
+        {
+            HandleGravity();
+            return;
+        }
+        
         if (isDashing)
         {
             HandleDash();
@@ -197,6 +204,16 @@ public class PlayerController : MonoBehaviour
     {
         dashUnlocked = true;
         Debug.Log("<color=green>★ Dash Unlocked!</color>");
+    }
+    
+    public void SetMovementEnabled(bool enabled)
+    {
+        movementEnabled = enabled;
+        if (!enabled)
+        {
+            moveInput = Vector2.zero;
+        }
+        Debug.Log($"<color=cyan>Player movement {(enabled ? "ENABLED" : "DISABLED")}</color>");
     }
     
     public bool HasDoubleJump => doubleJumpUnlocked;

@@ -158,13 +158,13 @@ public class LevelUpUI : MonoBehaviour
         switch (rarity)
         {
             case LevelUpgradeRarity.Common:
-                return new Color(0.2f, 0.2f, 0.2f, 0.9f);
+                return new Color(0.25f, 0.25f, 0.25f, 0.95f);
             case LevelUpgradeRarity.Rare:
-                return new Color(0.1f, 0.3f, 0.6f, 0.9f);
+                return new Color(0.15f, 0.4f, 0.75f, 0.95f);
             case LevelUpgradeRarity.Legendary:
-                return new Color(0.6f, 0.4f, 0f, 0.9f);
+                return new Color(0.8f, 0.6f, 0.1f, 0.95f);
             default:
-                return new Color(0.2f, 0.2f, 0.2f, 0.9f);
+                return new Color(0.25f, 0.25f, 0.25f, 0.95f);
         }
     }
     

@@ -21,6 +21,12 @@ public class BaseGate : MonoBehaviour
     [SerializeField] private Vector3 barrierSize = new Vector3(6f, 4f, 1f);
     [SerializeField] private Vector3 barrierOffset = new Vector3(0f, 2f, 0f);
     
+    [Header("Auto-Push on Start")]
+    [SerializeField] private bool useAutoPush = true;
+    [SerializeField] private Vector3 pushOutDirection = new Vector3(0f, 0f, -1f);
+    [SerializeField] private float pushDistance = 5f;
+    [SerializeField] private float pushDuration = 1.5f;
+    
     private bool isOpen;
     private Vector3 closedPosition;
     private Vector3 openPosition;
@@ -29,6 +35,7 @@ public class BaseGate : MonoBehaviour
     private bool canInteract = false;
     private InputAction interactAction;
     private BoxCollider instantBarrier;
+    private CharacterController playerController;
     
     private void Awake()
     {
@@ -88,6 +95,7 @@ public class BaseGate : MonoBehaviour
         if (player != null)
         {
             playerTransform = player.transform;
+            playerController = player.GetComponent<CharacterController>();
             
             PlayerInput playerInput = player.GetComponent<PlayerInput>();
             if (playerInput != null && playerInput.actions != null)
@@ -184,11 +192,55 @@ public class BaseGate : MonoBehaviour
     {
         if (canInteract && interactAction != null && interactAction.WasPressedThisFrame())
         {
-            if (RunStateManager.Instance != null)
+            if (useAutoPush)
             {
-                RunStateManager.Instance.StartRun();
-                Debug.Log("<color=green>Player clicked gate - Run starting!</color>");
+                StartCoroutine(PushPlayerOutAndStartRun());
             }
+            else
+            {
+                if (RunStateManager.Instance != null)
+                {
+                    RunStateManager.Instance.StartRun();
+                    Debug.Log("<color=green>Player clicked gate - Run starting!</color>");
+                }
+            }
+        }
+    }
+    
+    private System.Collections.IEnumerator PushPlayerOutAndStartRun()
+    {
+        Debug.Log("<color=cyan>Starting auto-push sequence!</color>");
+        
+        PlayerController playerControllerScript = playerTransform?.GetComponent<PlayerController>();
+        if (playerControllerScript != null)
+        {
+            playerControllerScript.SetMovementEnabled(false);
+        }
+        
+        HideInteractionPrompt();
+        
+        if (RunStateManager.Instance != null)
+        {
+            RunStateManager.Instance.StartRun();
+        }
+        
+        Vector3 pushDir = pushOutDirection.normalized;
+        float speed = pushDistance / pushDuration;
+        float elapsed = 0f;
+        
+        while (elapsed < pushDuration && playerController != null)
+        {
+            Vector3 movement = pushDir * speed * Time.deltaTime;
+            playerController.Move(movement);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        Debug.Log("<color=green>Auto-push complete! Player control restored.</color>");
+        
+        if (playerControllerScript != null)
+        {
+            playerControllerScript.SetMovementEnabled(true);
         }
     }
     
@@ -265,6 +317,15 @@ public class BaseGate : MonoBehaviour
             Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.DrawCube(barrierOffset, barrierSize);
             Gizmos.matrix = Matrix4x4.identity;
+        }
+        
+        if (useAutoPush)
+        {
+            Gizmos.color = new Color(0f, 1f, 1f, 0.5f);
+            Vector3 pushStart = transform.position;
+            Vector3 pushEnd = pushStart + pushOutDirection.normalized * pushDistance;
+            Gizmos.DrawLine(pushStart, pushEnd);
+            Gizmos.DrawWireSphere(pushEnd, 0.5f);
         }
     }
 }
