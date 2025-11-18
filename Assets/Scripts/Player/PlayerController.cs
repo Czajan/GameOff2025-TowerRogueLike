@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
     private bool isSprinting;
     private bool movementEnabled = true;
+    private bool overrideAnimationSpeed = false;
+    private float animationSpeedOverride = 0f;
     
     private bool doubleJumpUnlocked = false;
     private bool hasDoubleJumped = false;
@@ -238,14 +240,35 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"<color=cyan>Player movement {(enabled ? "ENABLED" : "DISABLED")}</color>");
     }
     
+    public void SetAnimationSpeedOverride(float speed)
+    {
+        overrideAnimationSpeed = true;
+        animationSpeedOverride = speed;
+    }
+    
+    public void ClearAnimationSpeedOverride()
+    {
+        overrideAnimationSpeed = false;
+        animationSpeedOverride = 0f;
+    }
+    
     private void UpdateAnimator()
     {
         if (animator == null) return;
         
-        float speedValue = moveInput.magnitude;
-        if (isSprinting && speedValue > 0.1f)
+        float speedValue;
+        
+        if (overrideAnimationSpeed)
         {
-            speedValue = speedValue * sprintMultiplier;
+            speedValue = animationSpeedOverride;
+        }
+        else
+        {
+            speedValue = moveInput.magnitude;
+            if (isSprinting && speedValue > 0.1f)
+            {
+                speedValue = speedValue * sprintMultiplier;
+            }
         }
         
         animator.SetFloat("Speed", speedValue);

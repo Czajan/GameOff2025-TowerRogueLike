@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 using System.Collections;
 
 public class DoubleDoorGate : MonoBehaviour
@@ -30,6 +31,16 @@ public class DoubleDoorGate : MonoBehaviour
     [SerializeField] private Vector3 pushOutDirection = new Vector3(0f, 0f, -1f);
     [SerializeField] private float pushDistance = 5f;
     [SerializeField] private float pushDuration = 1.5f;
+    [SerializeField] private bool lockCameraDuringPush = true;
+    [SerializeField] private bool forcePlayerRotation = true;
+    [SerializeField] private AnimationCurve pushSpeedCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] private float walkAnimationSpeed = 1f;
+    
+    [Header("Events")]
+    public UnityEvent OnPushStarted;
+    public UnityEvent OnPushComplete;
+    public UnityEvent OnGateOpened;
+    public UnityEvent OnGateClosed;
     
     private bool isOpen;
     private Quaternion leftDoorClosedRotation;
@@ -43,6 +54,7 @@ public class DoubleDoorGate : MonoBehaviour
     private InputAction interactAction;
     private BoxCollider instantBarrier;
     private CharacterController playerController;
+    private CinemachineMouseOrbit cameraOrbit;
     
     private void Awake()
     {
@@ -143,6 +155,15 @@ public class DoubleDoorGate : MonoBehaviour
         else
         {
             Debug.LogError("DoubleDoorGate: Player GameObject with 'Player' tag not found!");
+        }
+        
+        if (lockCameraDuringPush)
+        {
+            cameraOrbit = FindFirstObjectByType<CinemachineMouseOrbit>();
+            if (cameraOrbit != null)
+            {
+                Debug.Log("<color=green>DoubleDoorGate: Found CinemachineMouseOrbit for camera lock</color>");
+            }
         }
         
         if (RunStateManager.Instance != null)
@@ -250,39 +271,68 @@ public class DoubleDoorGate : MonoBehaviour
     
     private IEnumerator PushPlayerOutAndStartRun()
     {
-        Debug.Log("<color=cyan>Starting auto-push sequence!</color>");
+        Debug.Log("<color=cyan>Starting cinematic gate push sequence!</color>");
+        
+        OnPushStarted?.Invoke();
         
         PlayerController playerControllerScript = playerTransform?.GetComponent<PlayerController>();
         if (playerControllerScript != null)
         {
             playerControllerScript.SetMovementEnabled(false);
+            playerControllerScript.SetAnimationSpeedOverride(walkAnimationSpeed);
+        }
+        
+        if (lockCameraDuringPush && cameraOrbit != null)
+        {
+            cameraOrbit.enabled = false;
         }
         
         HideInteractionPrompt();
+        
+        Vector3 startPosition = playerTransform.position;
+        Quaternion startRotation = playerTransform.rotation;
+        Vector3 pushDir = pushOutDirection.normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(pushDir);
         
         if (RunStateManager.Instance != null)
         {
             RunStateManager.Instance.StartRun();
         }
         
-        Vector3 pushDir = pushOutDirection.normalized;
-        float speed = pushDistance / pushDuration;
         float elapsed = 0f;
         
-        while (elapsed < pushDuration && playerController != null)
+        while (elapsed < pushDuration && playerController != null && playerTransform != null)
         {
-            Vector3 movement = pushDir * speed * Time.deltaTime;
+            float t = elapsed / pushDuration;
+            float curveValue = pushSpeedCurve.Evaluate(t);
+            
+            float stepDistance = (pushDistance / pushDuration) * Time.deltaTime;
+            Vector3 movement = pushDir * stepDistance;
             playerController.Move(movement);
+            
+            if (forcePlayerRotation)
+            {
+                playerTransform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            }
+            
             elapsed += Time.deltaTime;
             yield return null;
         }
         
-        Debug.Log("<color=green>Auto-push complete! Player control restored.</color>");
+        Debug.Log("<color=green>Cinematic gate push complete! Player control restored.</color>");
         
         if (playerControllerScript != null)
         {
+            playerControllerScript.ClearAnimationSpeedOverride();
             playerControllerScript.SetMovementEnabled(true);
         }
+        
+        if (lockCameraDuringPush && cameraOrbit != null)
+        {
+            cameraOrbit.enabled = true;
+        }
+        
+        OnPushComplete?.Invoke();
     }
     
     public void OpenGate()
@@ -306,6 +356,7 @@ public class DoubleDoorGate : MonoBehaviour
             instantBarrier.enabled = false;
         }
         
+        OnGateOpened?.Invoke();
         Debug.Log("Double doors opened - run starting!");
     }
     
@@ -349,6 +400,7 @@ public class DoubleDoorGate : MonoBehaviour
             instantBarrier.enabled = true;
         }
         
+        OnGateClosed?.Invoke();
         Debug.Log("Double doors closed - back to pre-run menu!");
     }
     
