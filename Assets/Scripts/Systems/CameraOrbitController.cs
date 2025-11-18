@@ -17,9 +17,11 @@ public class CameraOrbitController : MonoBehaviour
     
     [Header("Collision Settings")]
     [SerializeField] private bool enableCollisionAvoidance = true;
-    [SerializeField] private float collisionBuffer = 0.3f;
+    [SerializeField] private float collisionSphereRadius = 0.5f;
+    [SerializeField] private float collisionBuffer = 0.5f;
     [SerializeField] private LayerMask collisionLayers = -1;
     [SerializeField] private bool showDebugRays = false;
+    [SerializeField] private float collisionPushSpeed = 15f;
     
     private float currentYaw;
     private float currentPitch = 45f;
@@ -81,20 +83,40 @@ public class CameraOrbitController : MonoBehaviour
         Vector3 desiredCameraPosition = targetPoint + directionFromTarget * desiredDistance;
         
         float targetDistance = desiredDistance;
+        bool hitDetected = false;
+        Vector3 hitPoint = Vector3.zero;
         
         if (enableCollisionAvoidance)
         {
-            Vector3 directionToCamera = desiredCameraPosition - targetPoint;
-            float checkDistance = directionToCamera.magnitude;
+            RaycastHit[] hits = Physics.SphereCastAll(
+                targetPoint,
+                collisionSphereRadius,
+                directionFromTarget,
+                desiredDistance,
+                collisionLayers,
+                QueryTriggerInteraction.Ignore
+            );
             
-            if (Physics.SphereCast(targetPoint, 0.3f, directionToCamera.normalized, out RaycastHit hit, checkDistance, collisionLayers, QueryTriggerInteraction.Ignore))
+            float closestHitDistance = desiredDistance;
+            
+            foreach (RaycastHit hit in hits)
             {
-                targetDistance = Mathf.Max(hit.distance - collisionBuffer, minDistance);
+                if (hit.distance < closestHitDistance)
+                {
+                    closestHitDistance = hit.distance;
+                    hitDetected = true;
+                    hitPoint = hit.point;
+                }
+            }
+            
+            if (hitDetected)
+            {
+                targetDistance = Mathf.Max(closestHitDistance - collisionBuffer, minDistance);
                 
                 if (showDebugRays)
                 {
-                    Debug.DrawLine(targetPoint, hit.point, Color.red, 0f, false);
-                    Debug.DrawLine(hit.point, desiredCameraPosition, Color.yellow, 0f, false);
+                    Debug.DrawLine(targetPoint, hitPoint, Color.red, 0f, false);
+                    Debug.DrawLine(hitPoint, desiredCameraPosition, Color.yellow, 0f, false);
                 }
             }
             else if (showDebugRays)
@@ -103,7 +125,14 @@ public class CameraOrbitController : MonoBehaviour
             }
         }
         
-        currentDistance = Mathf.Lerp(currentDistance, targetDistance, rotationSmoothing * Time.deltaTime);
+        if (hitDetected)
+        {
+            currentDistance = Mathf.Lerp(currentDistance, targetDistance, collisionPushSpeed * Time.deltaTime);
+        }
+        else
+        {
+            currentDistance = Mathf.Lerp(currentDistance, targetDistance, rotationSmoothing * Time.deltaTime);
+        }
         
         Vector3 finalDirection = targetRotation * Vector3.back;
         Vector3 finalPosition = targetPoint + finalDirection * currentDistance;
@@ -125,7 +154,18 @@ public class CameraOrbitController : MonoBehaviour
         Gizmos.DrawLine(targetPoint, transform.position);
         
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, 0.5f);
+        Gizmos.DrawWireSphere(transform.position, collisionSphereRadius);
+        
+        Quaternion targetRotation = Quaternion.Euler(currentPitch, currentYaw, 0f);
+        Vector3 directionFromTarget = targetRotation * Vector3.back;
+        
+        for (int i = 1; i <= 10; i++)
+        {
+            float distance = (desiredDistance / 10f) * i;
+            Vector3 spherePos = targetPoint + directionFromTarget * distance;
+            Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
+            Gizmos.DrawWireSphere(spherePos, collisionSphereRadius);
+        }
     }
 }
 
