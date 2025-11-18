@@ -50,9 +50,7 @@ public class ExperienceOrb : MonoBehaviour
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
         
         float bobAmount = Mathf.Sin(Time.time * bobSpeed + bobOffset) * bobHeight;
-        Vector3 bobPosition = transform.position;
-        bobPosition.y = startPosition.y + bobAmount;
-        transform.position = new Vector3(transform.position.x, bobPosition.y, transform.position.z);
+        transform.position += Vector3.up * bobAmount * Time.deltaTime;
     }
     
     private void OnTriggerEnter(Collider other)
