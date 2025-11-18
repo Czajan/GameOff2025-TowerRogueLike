@@ -4,7 +4,8 @@ using UnityEngine;
 public class BaseTrigger : MonoBehaviour
 {
     [Header("Gate Auto-Close")]
-    [SerializeField] private BaseGate gate;
+    [SerializeField] private DoubleDoorGate doubleDoorGate;
+    [SerializeField] private BaseGate oldGate;
     [SerializeField] private float autoCloseDelay = 1f;
     [SerializeField] private bool enableAutoClose = true;
     
@@ -17,9 +18,14 @@ public class BaseTrigger : MonoBehaviour
         triggerCollider = GetComponent<Collider>();
         triggerCollider.isTrigger = true;
         
-        if (gate == null)
+        if (doubleDoorGate == null)
         {
-            gate = FindFirstObjectByType<BaseGate>();
+            doubleDoorGate = FindFirstObjectByType<DoubleDoorGate>();
+        }
+        
+        if (doubleDoorGate == null && oldGate == null)
+        {
+            oldGate = FindFirstObjectByType<BaseGate>();
         }
     }
     
@@ -79,11 +85,30 @@ public class BaseTrigger : MonoBehaviour
         {
             if (RunStateManager.Instance != null && !RunStateManager.Instance.IsInPreRunMenu)
             {
-                if (gate != null && gate.IsOpen)
+                bool gateIsOpen = false;
+                
+                if (doubleDoorGate != null && doubleDoorGate.IsOpen)
+                {
+                    gateIsOpen = true;
+                }
+                else if (oldGate != null && oldGate.IsOpen)
+                {
+                    gateIsOpen = true;
+                }
+                
+                if (gateIsOpen)
                 {
                     hasAutoClosedGate = true;
                     
-                    gate.EnableBarrierInstantly();
+                    if (doubleDoorGate != null)
+                    {
+                        doubleDoorGate.EnableBarrierInstantly();
+                    }
+                    else if (oldGate != null)
+                    {
+                        oldGate.EnableBarrierInstantly();
+                    }
+                    
                     Debug.Log("<color=yellow>Player exited base zone - BARRIER ENABLED INSTANTLY!</color>");
                     
                     Invoke(nameof(CloseGateVisualAfterDelay), autoCloseDelay);
@@ -95,9 +120,14 @@ public class BaseTrigger : MonoBehaviour
     
     private void CloseGateVisualAfterDelay()
     {
-        if (gate != null)
+        if (doubleDoorGate != null)
         {
-            gate.CloseGate();
+            doubleDoorGate.CloseGate();
+            Debug.Log("<color=orange>Double door visual closed (barrier already active)</color>");
+        }
+        else if (oldGate != null)
+        {
+            oldGate.CloseGate();
             Debug.Log("<color=orange>Gate visual closed (barrier already active)</color>");
         }
     }
