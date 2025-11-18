@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections.Generic;
 
@@ -15,6 +16,8 @@ public class LevelUpUI : MonoBehaviour
     
     private List<GameObject> currentOptions = new List<GameObject>();
     private List<LevelUpgradeData> currentUpgradeChoices = new List<LevelUpgradeData>();
+    private CinemachineMouseOrbit cameraOrbit;
+    private PlayerInput playerInput;
     
     private void Awake()
     {
@@ -38,6 +41,13 @@ public class LevelUpUI : MonoBehaviour
         if (levelUpPanel != null)
         {
             levelUpPanel.SetActive(false);
+        }
+        
+        cameraOrbit = FindFirstObjectByType<CinemachineMouseOrbit>();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerInput = player.GetComponent<PlayerInput>();
         }
     }
     
@@ -73,6 +83,21 @@ public class LevelUpUI : MonoBehaviour
         
         levelUpPanel.SetActive(true);
         Time.timeScale = 0f;
+        
+        if (cameraOrbit != null)
+        {
+            cameraOrbit.enabled = false;
+        }
+        
+        if (playerInput != null)
+        {
+            playerInput.enabled = false;
+        }
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
+        Debug.Log("<color=cyan>LevelUpUI: Panel opened, camera locked, input disabled</color>");
     }
     
     private void CreateUpgradeButton(LevelUpgradeData upgrade)
@@ -186,8 +211,21 @@ public class LevelUpUI : MonoBehaviour
         }
         
         Time.timeScale = 1f;
+        
+        if (cameraOrbit != null)
+        {
+            cameraOrbit.enabled = true;
+        }
+        
+        if (playerInput != null)
+        {
+            playerInput.enabled = true;
+        }
+        
         ClearCurrentOptions();
         currentUpgradeChoices.Clear();
+        
+        Debug.Log("<color=green>LevelUpUI: Panel closed, camera restored, input enabled</color>");
     }
     
     private void ClearCurrentOptions()

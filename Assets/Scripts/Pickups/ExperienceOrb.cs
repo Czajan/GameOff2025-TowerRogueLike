@@ -4,6 +4,8 @@ public class ExperienceOrb : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float flySpeed = 10f;
+    [SerializeField] private float collectionDistance = 1.5f;
+    [SerializeField] private float targetHeight = 1f;
     
     [Header("Visual")]
     [SerializeField] private float rotationSpeed = 180f;
@@ -44,7 +46,16 @@ public class ExperienceOrb : MonoBehaviour
     {
         if (!isFlying || playerTransform == null) return;
         
-        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Vector3 targetPosition = playerTransform.position + Vector3.up * targetHeight;
+        float distanceToPlayer = Vector3.Distance(transform.position, targetPosition);
+        
+        if (distanceToPlayer < collectionDistance)
+        {
+            Collect();
+            return;
+        }
+        
+        Vector3 directionToPlayer = (targetPosition - transform.position).normalized;
         transform.position += directionToPlayer * flySpeed * Time.deltaTime;
         
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
