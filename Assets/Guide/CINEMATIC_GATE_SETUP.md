@@ -103,18 +103,20 @@ Four new events for audio/effects:
 3. **PlayerController** input disabled
 4. **Animation override** activated (walk animation plays)
 5. **CinemachineMouseOrbit** disabled (camera lock)
-6. **Player rotates** smoothly to face forward
-7. **Player moves** automatically through gate (using AnimationCurve)
-8. **OnPushComplete** event fires → Audio plays
-9. **Animation override cleared** (returns to normal)
-10. **Input restored**, camera unlocked
-11. Run starts!
+6. **Camera zooms out** (7 → 12-15 distance over 2s)
+7. **Player rotates** smoothly to face forward
+8. **Player moves** automatically through gate (using AnimationCurve)
+9. **OnPushComplete** event fires → Audio plays
+10. **Animation override cleared** (returns to normal)
+11. **Input restored**, camera unlocked
+12. Run starts with wide camera view!
 
 ### Technical Details:
 - Uses `CharacterController.Move()` for movement
 - `Quaternion.Slerp()` for smooth rotation
 - `AnimationCurve.Evaluate()` for speed control
 - `SetAnimationSpeedOverride()` forces animator Speed parameter
+- `CinemachineDynamicDistance` controls camera zoom
 - Coroutine-based for frame-by-frame control
 
 ---
@@ -155,7 +157,7 @@ Push Speed Curve: EaseIn
 Wire up events to:
 - Particle effects (dust, wind)
 - Screen shake
-- Camera zoom
+- Camera zoom (now automatic! See `/Assets/Guide/DYNAMIC_CAMERA_ZOOM.md`)
 - UI fade
 - Vignette effect
 
@@ -259,3 +261,4 @@ Consider adding:
 - Background music transition
 - Slow-motion effect
 - Post-processing effects (vignette, bloom)
+- **Dynamic camera zoom** (see `/Assets/Guide/DYNAMIC_CAMERA_ZOOM.md`) ✅

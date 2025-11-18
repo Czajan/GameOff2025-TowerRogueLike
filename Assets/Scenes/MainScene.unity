@@ -233,6 +233,46 @@ MonoBehaviour:
   mouseSensitivity: 0.2
   minVerticalAngle: 10
   maxVerticalAngle: 70
+--- !u!114 &545395147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545395138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63371b65235ae14cba70fb5cdb1e6d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CinemachineDynamicDistance
+  preRunDistance: 7
+  runDistance: 12
+  transitionDuration: 2
+  transitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  showDebug: 0
 --- !u!1 &651249297
 GameObject:
   m_ObjectHideFlags: 0
@@ -7311,6 +7351,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8040880547123072882, guid: a373643fb41cfeb4082e0777351959f8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 545395142}
+    - targetCorrespondingSourceObject: {fileID: 8040880547123072882, guid: a373643fb41cfeb4082e0777351959f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 545395147}
   m_SourcePrefab: {fileID: 100100000, guid: a373643fb41cfeb4082e0777351959f8, type: 3}
 --- !u!1001 &6309567842120486080
 PrefabInstance:
