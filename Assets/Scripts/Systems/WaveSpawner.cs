@@ -11,6 +11,7 @@ public class WaveSpawner : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int initialEnemiesPerWave = 3;
     [SerializeField] private float enemiesIncreasePerWave = 2f;
+    [SerializeField] private float firstWaveDelay = 5f;
     [SerializeField] private float timeBetweenWaves = 30f;
     [SerializeField] private int wavesPerSession = 10;
     
@@ -137,6 +138,12 @@ public class WaveSpawner : MonoBehaviour
         Debug.Log($"Target: {wavesPerSession} waves spawning every {timeBetweenWaves} seconds");
         Debug.Log($"<color=yellow>Waves will OVERLAP - multiple waves can be active simultaneously!</color>");
         
+        if (firstWaveDelay > 0f)
+        {
+            Debug.Log($"<color=cyan>First wave delayed by {firstWaveDelay} seconds. Get ready!</color>");
+            yield return new WaitForSeconds(firstWaveDelay);
+        }
+        
         for (int i = 0; i < wavesPerSession; i++)
         {
             currentWaveNumber++;
@@ -189,16 +196,7 @@ public class WaveSpawner : MonoBehaviour
             return;
         }
         
-        Vector3 spawnPosition = GetRandomSpawnPosition();
-        
-        CharacterController enemyController = enemyPrefab.GetComponent<CharacterController>();
-        if (enemyController != null)
-        {
-            if (Mathf.Approximately(enemyController.center.y, 0f))
-            {
-                spawnPosition.y = enemyController.height / 2f;
-            }
-        }
+        Vector3 spawnPosition = GetSafeSpawnPosition();
         
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
         
@@ -218,6 +216,12 @@ public class WaveSpawner : MonoBehaviour
             {
                 enemyAI.SetDefenseZone(activeDefenseZone);
             }
+        }
+        
+        UnityEngine.AI.NavMeshAgent navAgent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (navAgent != null)
+        {
+            navAgent.Warp(spawnPosition);
         }
     }
     
@@ -262,6 +266,22 @@ public class WaveSpawner : MonoBehaviour
                attempts < maxAttempts);
         
         return spawnPosition;
+    }
+    
+    private Vector3 GetSafeSpawnPosition()
+    {
+        Vector3 spawnPos = GetRandomSpawnPosition();
+        
+        if (Physics.Raycast(spawnPos + Vector3.up * 5f, Vector3.down, out RaycastHit hit, 10f))
+        {
+            spawnPos = hit.point;
+        }
+        else
+        {
+            spawnPos.y = 0;
+        }
+        
+        return spawnPos;
     }
     
     public void SetActiveZone(DefenseZone zone)
