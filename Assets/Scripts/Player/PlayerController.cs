@@ -273,6 +273,11 @@ public class PlayerController : MonoBehaviour
         
         animator.SetFloat("Speed", speedValue);
         animator.SetBool("IsGrounded", characterController.isGrounded);
+        
+        if (characterController.isGrounded && velocity.y <= 0)
+        {
+            animator.ResetTrigger("Jump");
+        }
     }
     
     public bool HasDoubleJump => doubleJumpUnlocked;
