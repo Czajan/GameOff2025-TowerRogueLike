@@ -140,15 +140,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f110e11666fff1d44b1fe4aa9bac8f37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
+  moveSpeed: 3.5
   sprintMultiplier: 1.5
   rotationSpeed: 10
-  jumpHeight: 1
-  gravity: -15
+  groundStickForce: -2
+  jumpHeight: 2
+  gravity: -20
   dashDistance: 5
   dashDuration: 0.2
   dashCooldown: 1
   cameraTransform: {fileID: 0}
+  animator: {fileID: 8451724077331159065}
 --- !u!114 &9156048727011227620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +189,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   attackPoint: {fileID: 1491151088630206029}
+  animator: {fileID: 0}
   mainCamera: {fileID: 0}
   rotationSpeed: 15
   aimWithCursor: 1
@@ -414,6 +417,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7dc6b5014e4fb5c4293ff10437af7b39, type: 2}
+    - target: {fileID: 9500000, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700002, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 899b963fc9982334da61b5d9484e82bf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 100010, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
@@ -432,5 +451,10 @@ PrefabInstance:
 --- !u!4 &8451724077322106865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400008, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
+  m_PrefabInstance: {fileID: 8451724077321710969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8451724077331159065 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: 9ad76de1617627d45ba4fa8ddf255af4, type: 3}
   m_PrefabInstance: {fileID: 8451724077321710969}
   m_PrefabAsset: {fileID: 0}

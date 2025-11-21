@@ -5,15 +5,16 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float sprintMultiplier = 1.5f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float groundStickForce = -2f;
     
     private float statMoveSpeed;
     
     [Header("Jump Settings")]
     [SerializeField] private float jumpHeight = 2f;
-    [SerializeField] private float gravity = -15f;
+    [SerializeField] private float gravity = -20f;
     
     [Header("Special Abilities")]
     [SerializeField] private float dashDistance = 5f;
@@ -132,12 +133,15 @@ public class PlayerController : MonoBehaviour
         {
             if (velocity.y < 0)
             {
-                velocity.y = -2f;
+                velocity.y = groundStickForce;
             }
             hasDoubleJumped = false;
         }
+        else
+        {
+            velocity.y += gravity * Time.deltaTime;
+        }
         
-        velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
     
@@ -283,4 +287,5 @@ public class PlayerController : MonoBehaviour
     public bool HasDoubleJump => doubleJumpUnlocked;
     public bool HasDash => dashUnlocked;
     public bool IsMoving => moveInput.magnitude > 0.1f;
+    public float MoveSpeed => statMoveSpeed;
 }

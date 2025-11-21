@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 497940048385697909}
   - component: {fileID: 8353625269004142978}
   - component: {fileID: 8597662789778996638}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 6960984091702678965}
   - component: {fileID: 7771050157707021464}
   - component: {fileID: 2766924683595830995}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 6685640608027934030}
   - component: {fileID: 8899274746024926571}
   - component: {fileID: 3921402906592215204}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 9193116868552430012}
   - component: {fileID: 2640322014145815649}
   - component: {fileID: 6528393611826715768}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 5838837886922774518}
   - component: {fileID: 772540402144751041}
   - component: {fileID: 8706065086930477210}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (105)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 3256593914694978982}
   - component: {fileID: 9078463917390025099}
   - component: {fileID: 7376308307928969923}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -713,7 +713,7 @@ GameObject:
   - component: {fileID: 8594586507097432342}
   - component: {fileID: 2232166232682008026}
   - component: {fileID: 8499612255811637033}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -825,7 +825,7 @@ GameObject:
   - component: {fileID: 3306190592639126627}
   - component: {fileID: 4024126042113176983}
   - component: {fileID: 2691174415870080323}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (106)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1047,7 +1047,7 @@ GameObject:
   - component: {fileID: 8536166534624689592}
   - component: {fileID: 878239642955521068}
   - component: {fileID: 1784267944672664803}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1159,7 +1159,7 @@ GameObject:
   - component: {fileID: 1393491168695312797}
   - component: {fileID: 5334652452097049856}
   - component: {fileID: 3602724932097759767}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (108)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1270,7 +1270,7 @@ GameObject:
   - component: {fileID: 7993554584326940992}
   - component: {fileID: 7446149615725825333}
   - component: {fileID: 6716512563066675416}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1381,7 +1381,7 @@ GameObject:
   - component: {fileID: 328058158271423760}
   - component: {fileID: 4709968304446473082}
   - component: {fileID: 466920056805652459}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (100)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1492,7 +1492,7 @@ GameObject:
   - component: {fileID: 1178999795053581548}
   - component: {fileID: 9083413621897843740}
   - component: {fileID: 6643674792072701528}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1604,7 +1604,7 @@ GameObject:
   - component: {fileID: 624348018078847157}
   - component: {fileID: 4942208197861589307}
   - component: {fileID: 2227711088281098942}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1715,7 +1715,7 @@ GameObject:
   - component: {fileID: 2976068848622015337}
   - component: {fileID: 6464231913136893565}
   - component: {fileID: 5854329297519289327}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (103)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1826,7 +1826,7 @@ GameObject:
   - component: {fileID: 7421090753047012292}
   - component: {fileID: 6518667467013174084}
   - component: {fileID: 1319865544895813813}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1938,7 +1938,7 @@ GameObject:
   - component: {fileID: 9068533573472777427}
   - component: {fileID: 5440760859505651199}
   - component: {fileID: 5799535233713687201}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2053,7 +2053,7 @@ GameObject:
   - component: {fileID: 1539666220084122489}
   - component: {fileID: 7267228924323905198}
   - component: {fileID: 9011781766725861509}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_Alcove_Small_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2234,7 +2234,7 @@ GameObject:
   - component: {fileID: 4162964797733596945}
   - component: {fileID: 6977453221714730517}
   - component: {fileID: 4213090393260077660}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Statue_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2411,7 +2411,7 @@ GameObject:
   - component: {fileID: 4506272190294143772}
   - component: {fileID: 4562874770478070457}
   - component: {fileID: 5613348828982835575}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_04 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2501,7 +2501,7 @@ GameObject:
   - component: {fileID: 6405417093548292440}
   - component: {fileID: 4227457362039399030}
   - component: {fileID: 7136004927605778540}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dust_02 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2613,7 +2613,7 @@ GameObject:
   - component: {fileID: 8506485831018279441}
   - component: {fileID: 5159064529535601095}
   - component: {fileID: 1009962204663602413}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2725,7 +2725,7 @@ GameObject:
   - component: {fileID: 9154661465062662871}
   - component: {fileID: 5255554812508535986}
   - component: {fileID: 6998984845934770059}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Rubble_Slab_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2837,7 +2837,7 @@ GameObject:
   - component: {fileID: 7941548696732186360}
   - component: {fileID: 7516353560512047737}
   - component: {fileID: 3610706169958934892}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (212)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2947,7 +2947,7 @@ GameObject:
   - component: {fileID: 7010510546478121816}
   - component: {fileID: 8480345437430552788}
   - component: {fileID: 3021693748498816914}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_06 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3036,7 +3036,7 @@ GameObject:
   - component: {fileID: 8140047762310568981}
   - component: {fileID: 4780330337636456457}
   - component: {fileID: 2988080109087663752}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_04 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3126,7 +3126,7 @@ GameObject:
   - component: {fileID: 1909989642939353865}
   - component: {fileID: 5435336770870141796}
   - component: {fileID: 4749290820648668897}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3237,7 +3237,7 @@ GameObject:
   - component: {fileID: 1352211448692964609}
   - component: {fileID: 7760588034178741091}
   - component: {fileID: 1405465309357877060}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Dwarf_Cog_Pile_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3349,7 +3349,7 @@ GameObject:
   - component: {fileID: 5830234245183567569}
   - component: {fileID: 622183352557709655}
   - component: {fileID: 7716047306162915049}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (102)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3460,7 +3460,7 @@ GameObject:
   - component: {fileID: 2965787552390186993}
   - component: {fileID: 4711501626820542639}
   - component: {fileID: 3807155274404819817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Gate_01_Door_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3571,7 +3571,7 @@ GameObject:
   - component: {fileID: 3508767902973230425}
   - component: {fileID: 8691945225581271201}
   - component: {fileID: 4921912537478983813}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (96)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3682,7 +3682,7 @@ GameObject:
   - component: {fileID: 6969462660271313809}
   - component: {fileID: 6325686682813543116}
   - component: {fileID: 5590080705570875504}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3796,7 +3796,7 @@ GameObject:
   - component: {fileID: 6624338401542579634}
   - component: {fileID: 1381556259858930793}
   - component: {fileID: 1321868678407642691}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_Alcove_Small_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3974,7 +3974,7 @@ GameObject:
   - component: {fileID: 4904262588358187695}
   - component: {fileID: 130774971668357839}
   - component: {fileID: 7817045715518717995}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4085,7 +4085,7 @@ GameObject:
   - component: {fileID: 4478933931060415297}
   - component: {fileID: 1008908262911718454}
   - component: {fileID: 4714917031266426272}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (30)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4196,7 +4196,7 @@ GameObject:
   - component: {fileID: 8914495996298880844}
   - component: {fileID: 5960434723047387987}
   - component: {fileID: 5218428219291122071}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4341,7 +4341,7 @@ GameObject:
   - component: {fileID: 2151466045098368084}
   - component: {fileID: 2390362402310261081}
   - component: {fileID: 8352727808300285498}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_03 (109)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4544,7 +4544,7 @@ GameObject:
   - component: {fileID: 7597326278220901485}
   - component: {fileID: 9201201103978432483}
   - component: {fileID: 8939783016369392930}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4658,7 +4658,7 @@ GameObject:
   - component: {fileID: 7929028484703111391}
   - component: {fileID: 2136088087192847425}
   - component: {fileID: 2067988269287088934}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_Alcove_Small_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4836,7 +4836,7 @@ GameObject:
   - component: {fileID: 7712479051720185738}
   - component: {fileID: 4862498198435134894}
   - component: {fileID: 7225946711103005498}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_03 (110)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5059,7 +5059,7 @@ GameObject:
   - component: {fileID: 2030126098578725206}
   - component: {fileID: 2947668091641913516}
   - component: {fileID: 8171058614511524759}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Rug_08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5171,7 +5171,7 @@ GameObject:
   - component: {fileID: 2192740517548502234}
   - component: {fileID: 8426858673106590915}
   - component: {fileID: 4115791716606358087}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5283,7 +5283,7 @@ GameObject:
   - component: {fileID: 5654663336870183476}
   - component: {fileID: 9067700267663929403}
   - component: {fileID: 4763758645023730794}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Rubble_Slab_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5483,7 +5483,7 @@ GameObject:
   - component: {fileID: 5051306002891108187}
   - component: {fileID: 6028591285775408940}
   - component: {fileID: 7852529745246094657}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5573,7 +5573,7 @@ GameObject:
   - component: {fileID: 5304031161528636534}
   - component: {fileID: 5032262268043714172}
   - component: {fileID: 8320018740720662794}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (104)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5684,7 +5684,7 @@ GameObject:
   - component: {fileID: 6671237903583852415}
   - component: {fileID: 3560762840609310407}
   - component: {fileID: 7565603147705724629}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_DoorFrame_Double_01_Door_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5700,7 +5700,7 @@ Transform:
   m_GameObject: {fileID: 5012316797265328194}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.012517033, z: -0, w: 0.9999217}
-  m_LocalPosition: {x: -1.2221546, y: 1.0237154, z: 0.000009765625}
+  m_LocalPosition: {x: -1.2221546, y: 1.059, z: 0.000009765625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5796,7 +5796,7 @@ GameObject:
   - component: {fileID: 2971727150958097360}
   - component: {fileID: 8310543505308954923}
   - component: {fileID: 3510389623696916022}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5911,7 +5911,7 @@ GameObject:
   - component: {fileID: 16146735759418762}
   - component: {fileID: 8806926584695057005}
   - component: {fileID: 1848761632031419618}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Statue_Broken_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6089,7 +6089,7 @@ GameObject:
   - component: {fileID: 656115261839321140}
   - component: {fileID: 5602375287314987699}
   - component: {fileID: 8969168929612923053}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6201,7 +6201,7 @@ GameObject:
   - component: {fileID: 5764468479334772867}
   - component: {fileID: 3768200294459300483}
   - component: {fileID: 5333642811932261707}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6312,7 +6312,7 @@ GameObject:
   - component: {fileID: 2857525837965343726}
   - component: {fileID: 7937779640615044938}
   - component: {fileID: 8127697464292612084}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6423,7 +6423,7 @@ GameObject:
   - component: {fileID: 7831157218319010613}
   - component: {fileID: 3574767779402292359}
   - component: {fileID: 9167449651095700371}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_06 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6516,7 +6516,7 @@ GameObject:
   - component: {fileID: 1077787252297784645}
   - component: {fileID: 4987008634511935286}
   - component: {fileID: 7007316557926095199}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_Alcove_Small_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6694,7 +6694,7 @@ GameObject:
   - component: {fileID: 5440164141561025607}
   - component: {fileID: 7376364478757680372}
   - component: {fileID: 6567494209308157984}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (213)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6805,7 +6805,7 @@ GameObject:
   - component: {fileID: 876342687609452788}
   - component: {fileID: 1404388787021030719}
   - component: {fileID: 9162580104391753286}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Gate_01_Door_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6916,7 +6916,7 @@ GameObject:
   - component: {fileID: 2024249025912309532}
   - component: {fileID: 1191913444706731052}
   - component: {fileID: 2479467149208941194}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7027,7 +7027,7 @@ GameObject:
   - component: {fileID: 3123074583085542176}
   - component: {fileID: 4926532746224185700}
   - component: {fileID: 6439261977648316102}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7138,7 +7138,7 @@ GameObject:
   - component: {fileID: 4748609817035963368}
   - component: {fileID: 4706680105986689166}
   - component: {fileID: 9093849372562186439}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (97)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7254,7 +7254,7 @@ GameObject:
   - component: {fileID: 5929671864071784626}
   - component: {fileID: 1730527435988836192}
   - component: {fileID: 5299866002055044247}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_Archway_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7473,7 +7473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5501582004854360794}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7586,7 +7586,7 @@ GameObject:
   - component: {fileID: 5862980149797417777}
   - component: {fileID: 6080573252627613550}
   - component: {fileID: 797306814007095034}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_04 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7800,7 +7800,7 @@ GameObject:
   - component: {fileID: 8383857409635425834}
   - component: {fileID: 1553700497654445473}
   - component: {fileID: 6153024666105676317}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Banner_04 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7890,7 +7890,7 @@ GameObject:
   - component: {fileID: 5784081095283099616}
   - component: {fileID: 4529279918679890464}
   - component: {fileID: 4106562492456430060}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8001,7 +8001,7 @@ GameObject:
   - component: {fileID: 2850018406382170148}
   - component: {fileID: 6955900106657754576}
   - component: {fileID: 5461267565480555111}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8112,7 +8112,7 @@ GameObject:
   - component: {fileID: 8422142718713764275}
   - component: {fileID: 4291878850828068700}
   - component: {fileID: 3292477843779838243}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8224,7 +8224,7 @@ GameObject:
   - component: {fileID: 1622870735136086164}
   - component: {fileID: 6717749487634391440}
   - component: {fileID: 2774170526259106886}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_DoorFrame_Double_01_Door_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8240,7 +8240,7 @@ Transform:
   m_GameObject: {fileID: 7056575093925467309}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.008250265, z: -0, w: 0.99996597}
-  m_LocalPosition: {x: -3.7778454, y: 1.0237154, z: 0.000009765625}
+  m_LocalPosition: {x: -3.7778454, y: 1.059, z: 0.000009765625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8336,7 +8336,7 @@ GameObject:
   - component: {fileID: 8526843545303833661}
   - component: {fileID: 2608839398319584510}
   - component: {fileID: 1229921657795207696}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (109)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8447,7 +8447,7 @@ GameObject:
   - component: {fileID: 9163813509696441806}
   - component: {fileID: 9222592880128099363}
   - component: {fileID: 7826085426616301787}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (99)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8628,7 +8628,7 @@ GameObject:
   - component: {fileID: 1806057926978415080}
   - component: {fileID: 7285887818874087330}
   - component: {fileID: 8043210775638298983}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (207)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8739,7 +8739,7 @@ GameObject:
   - component: {fileID: 561019829804163027}
   - component: {fileID: 6235773510929453854}
   - component: {fileID: 8367368686875740138}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8851,7 +8851,7 @@ GameObject:
   - component: {fileID: 3588372615438736795}
   - component: {fileID: 2568245309068472348}
   - component: {fileID: 947978455876385432}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Prop_Rug_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8963,7 +8963,7 @@ GameObject:
   - component: {fileID: 181680330646686895}
   - component: {fileID: 675711951132002383}
   - component: {fileID: 2896837245835373053}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9074,7 +9074,7 @@ GameObject:
   - component: {fileID: 5943230817447327764}
   - component: {fileID: 7647777636536712609}
   - component: {fileID: 2614845461745277458}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (208)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9185,7 +9185,7 @@ GameObject:
   - component: {fileID: 3631127844790548646}
   - component: {fileID: 6028241200254293457}
   - component: {fileID: 5881884157113771232}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9300,7 +9300,9 @@ GameObject:
   - component: {fileID: 3683594684767710860}
   - component: {fileID: 3400847594913328607}
   - component: {fileID: 4312754980703063799}
-  m_Layer: 0
+  - component: {fileID: 8663042969337996562}
+  - component: {fileID: 5893985665997480401}
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Gate_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9461,17 +9463,174 @@ MonoBehaviour:
   leftDoorCollider: {fileID: 3807155274404819817}
   rightDoorCollider: {fileID: 9162580104391753286}
   startsOpen: 0
-  openAngle: 90
+  openAngle: -90
   animationSpeed: 90
   interactionRange: 3
+  interactionOffset: {x: 0, y: 11, z: 0}
   interactionPrompt: to Start Run
   useInstantBarrier: 1
-  barrierSize: {x: 6, y: 4, z: 1}
-  barrierOffset: {x: 0, y: 2, z: 0}
+  barrierSize: {x: 8, y: 8, z: 1}
+  barrierOffset: {x: 0, y: 13, z: 0}
   useAutoPush: 1
-  pushOutDirection: {x: 0, y: 0, z: -1}
+  pushOutDirection: {x: 0, y: 0, z: 2}
   pushDistance: 5
   pushDuration: 1.5
+  lockCameraDuringPush: 1
+  forcePlayerRotation: 1
+  pushSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  walkAnimationSpeed: 1
+  OnPushStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPushComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGateOpened:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGateClosed:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!82 &8663042969337996562
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8282346330842003129}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5893985665997480401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8282346330842003129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9793650cefd06348a2ead9ea42c04e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GateAudioController
+  pushStartSound: {fileID: 0}
+  pushCompleteSound: {fileID: 0}
+  gateOpenSound: {fileID: 0}
+  gateCloseSound: {fileID: 0}
+  pushStartVolume: 1
+  pushCompleteVolume: 1
+  gateOpenVolume: 1
+  gateCloseVolume: 1
 --- !u!1 &8381287637822517940
 GameObject:
   m_ObjectHideFlags: 0
@@ -9484,7 +9643,7 @@ GameObject:
   - component: {fileID: 3354697796476865960}
   - component: {fileID: 9149953772689677405}
   - component: {fileID: 1190598127959487045}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01 (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9596,7 +9755,7 @@ GameObject:
   - component: {fileID: 960901448446884955}
   - component: {fileID: 6483105657064910815}
   - component: {fileID: 2390622720343504296}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (101)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9707,7 +9866,7 @@ GameObject:
   - component: {fileID: 4379059051866585708}
   - component: {fileID: 721285202448663513}
   - component: {fileID: 7043563217272238380}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (98)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9818,7 +9977,7 @@ GameObject:
   - component: {fileID: 4027166885721458419}
   - component: {fileID: 4780477557825243692}
   - component: {fileID: 8025212553660499978}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9930,7 +10089,7 @@ GameObject:
   - component: {fileID: 836974194134795931}
   - component: {fileID: 2532873401690581031}
   - component: {fileID: 1084105141166815877}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_28 (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10044,7 +10203,7 @@ GameObject:
   - component: {fileID: 6858982365101681564}
   - component: {fileID: 3711387357002220283}
   - component: {fileID: 8255528760419242863}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Wall_DoorFrame_Double_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10060,8 +10219,8 @@ Transform:
   m_GameObject: {fileID: 8990397444804698655}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 19.73, y: -8.5, z: -9.93}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 19.73, y: -8.6322, z: -10.063}
+  m_LocalScale: {x: 1.053, y: 1.053, z: 1.053}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7271976840405197745}
@@ -10256,7 +10415,7 @@ GameObject:
   - component: {fileID: 4741375692829289191}
   - component: {fileID: 5722114305838620488}
   - component: {fileID: 4961453294662045906}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Env_Dwarf_Floor_21 (107)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
