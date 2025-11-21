@@ -44,6 +44,11 @@ public class EnemyAI : MonoBehaviour
         
         FindDefenseObjective();
         UpdateTarget();
+        
+        if (RadarSystem.Instance != null)
+        {
+            RadarSystem.Instance.RegisterEnemy(transform);
+        }
     }
     
     private void Update()
@@ -190,7 +195,21 @@ public class EnemyAI : MonoBehaviour
     public void Die()
     {
         isDead = true;
+        
+        if (RadarSystem.Instance != null)
+        {
+            RadarSystem.Instance.UnregisterEnemy(transform);
+        }
+        
         Destroy(gameObject, 0.5f);
+    }
+    
+    private void OnDestroy()
+    {
+        if (RadarSystem.Instance != null)
+        {
+            RadarSystem.Instance.UnregisterEnemy(transform);
+        }
     }
     
     private void OnDrawGizmosSelected()

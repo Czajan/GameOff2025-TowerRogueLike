@@ -51,6 +51,12 @@ public class DefenseZone : MonoBehaviour
         
         OnZoneActivated?.Invoke();
         ApplyZonePerksToPlayer();
+        
+        if (RadarSystem.Instance != null)
+        {
+            RadarSystem.Instance.SetActiveDefenseZone(transform);
+        }
+        
         Debug.Log($"Defense Zone {zoneIndex + 1} activated! Perks: +{damageBonus * 100}% damage, +{attackSpeedBonus * 100}% attack speed, +{moveSpeedBonus * 100}% move speed");
     }
     
